@@ -32,7 +32,10 @@ The following features will be in this app:
 - A user settings screen
 	- a field to change user name
 	- a field to change password
-- A database wich holds the app's wich stores
+
+Database
+--------
+A database with the following tables and entries
 	- the jokes
 		- id
 		- the tittle
