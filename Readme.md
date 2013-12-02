@@ -36,20 +36,10 @@ The following features will be in this app:
 Database
 --------
 A database with the following tables and entries
-- the jokes
-	- id
-	- the tittle
-	- user id
-- genre's
-	- id
-	- the name of the genre
+- jokes
+- categories
 - users
-	- id
-	- username
-	- password
-- many to one 
-	- joke id
-	- genre id
+- jokes-categories
 
 further information
 -------------------
