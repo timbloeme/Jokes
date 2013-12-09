@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Jokes</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <!-- Button strings  -->
+    <string name="edit_button">Edit</string>
+    <!-- Profile layout -->
+    <string name="profile_name">Name:</string>
+    <string name="profile_password">Password</string>
+	<!-- Joke layout  -->
+	<string name="joke_name">Name:</string>
+</resources>
