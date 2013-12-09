@@ -18,8 +18,12 @@ Database
 		<td>String</td>
 	</tr>
 	<tr>
-		<td>User</td>
+		<td>Joke</td>
 		<td>String</td>
+	</tr>
+	<tr>
+		<td>UserId</td>
+		<td>Integer</td>
 	</tr>
 </table>
 
@@ -64,10 +68,6 @@ Database
 	<tr>
 		<th>Name</th>
 		<th>Type</th>
-	</tr>
-	<tr>
-		<td>Id</td>
-		<td>Integer</td>
 	</tr>
 	<tr>
 		<td>JokeId</td>
