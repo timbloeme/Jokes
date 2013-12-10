@@ -52,7 +52,9 @@ public class MainActivity extends Activity {
         case android.R.id.home:
         	ViewFlipper vf = (ViewFlipper) findViewById(R.id.viewFlipper);
         	vf.setDisplayedChild(HOME);
-            // Toast.makeText(this, "home pressed", Toast.LENGTH_LONG).show();
+        	TextView tv = (TextView) findViewById(R.id.jokes_list_title);
+        	tv.setText("Most recent jokes:");
+            // Set jokes list to most recent
             break;
             
         }
@@ -79,7 +81,6 @@ public class MainActivity extends Activity {
     			final String item = (String) parent.getItemAtPosition(position);
     			// pak het Joke element en geef deze mee aan showJoke
     			showJoke(item);
-    			Log.v("TEST",item);
     		}
     	});
     	
@@ -114,6 +115,8 @@ public class MainActivity extends Activity {
     public void showSearchedJokes(View view) {
     	ViewFlipper vf = (ViewFlipper) findViewById(R.id.viewFlipper);
     	vf.setDisplayedChild(JOKES_LIST);
+    	TextView tv = (TextView) findViewById(R.id.jokes_list_title);
+    	tv.setText("Found jokes:");
     	// set jokes list
     }
     
@@ -126,6 +129,8 @@ public class MainActivity extends Activity {
     public void showFavorites(View view) {
     	ViewFlipper vf = (ViewFlipper) findViewById(R.id.viewFlipper);
     	vf.setDisplayedChild(FAVORITES);
+    	TextView tv = (TextView) findViewById(R.id.jokes_list_title);
+    	tv.setText("Your favorite jokes:");
     	// set jokes list
     }
 }
