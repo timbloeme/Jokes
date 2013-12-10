@@ -10,21 +10,25 @@
         android:orientation="horizontal">
     
     	<TextView
-        	android:layout_width="match_parent"
+        	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
+        	android:layout_weight="1"
         	android:text="@string/joke_name"/>
     
     	<TextView
         	android:id="@+id/joke_name"
-        	android:layout_width="match_parent"
-        	android:layout_height="wrap_content"/>
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:layout_weight="3"
+        	android:text="@string/hello_world"/>
     	
     </LinearLayout>
     
     <TextView
         android:id="@+id/joke_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:text="@string/hello_world"/>
     
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,15 +36,18 @@
         android:orientation="horizontal">
     
     	<TextView
-        	android:layout_width="match_parent"
+        	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
+        	android:layout_weight="1"
         	android:text="@string/joke_author"/>
     
     	<TextView
         	android:id="@+id/joke_author"
-        	android:layout_width="match_parent"
-        	android:layout_height="wrap_content"/>
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:layout_weight="3"
+        	android:text="@string/hello_world"/>
     	
     </LinearLayout>
-
+    
 </LinearLayout>

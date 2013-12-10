@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -15,8 +16,9 @@ import android.widget.ViewFlipper;
 
 public class MainActivity extends Activity {
 
-	// favorites is nothing more than a special jokes_list
+	// favorites and home are nothing more than a special jokes_list
 	public static final int FAVORITES  = 0;
+	public static final int HOME       = 0;
 	public static final int JOKES_LIST = 0;
 	public static final int JOKE	   = 1;
 	public static final int PROFILE    = 2;
@@ -25,6 +27,9 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
+        // make the logo in the action bar clickabe
+        getActionBar().setDisplayHomeAsUpEnabled(true);
         
         // set jokes list to most recent / most popular
         ArrayList<String> jokes = new ArrayList<String>();
@@ -37,6 +42,22 @@ public class MainActivity extends Activity {
         jokes.add("#7");
         jokes.add("#8");
         setJokes(jokes);
+    }
+    
+    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+        int itemId = item.getItemId();
+        
+        switch (itemId) {
+        
+        case android.R.id.home:
+        	ViewFlipper vf = (ViewFlipper) findViewById(R.id.viewFlipper);
+        	vf.setDisplayedChild(HOME);
+            // Toast.makeText(this, "home pressed", Toast.LENGTH_LONG).show();
+            break;
+            
+        }
+
+        return true;
     }
 
     @Override
@@ -84,13 +105,10 @@ public class MainActivity extends Activity {
     
     // voor nu wordt er een string meegegeven, dit moet uiteindelijk een Joke element worden
     public void showJoke(String joke){
-		Log.v("TEST",joke);
     	ViewFlipper vf = (ViewFlipper) findViewById(R.id.viewFlipper);
     	vf.setDisplayedChild(JOKE);
     	TextView tv = (TextView) findViewById(R.id.joke_name);
-    	tv.setText("TESTING TESTER TEST!");
-    	TextView tv2 = (TextView) findViewById(R.id.joke_author);
-    	tv2.setText("TESTING TESTER TEST!");
+    	tv.setText(joke);
     }
     
     public void showSearchedJokes(View view) {
