@@ -7,6 +7,12 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world"/>
+        android:gravity="center"
+        android:text="@string/joke_list_title"/>
+    
+    <ListView
+        android:id="@+id/jokes_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>
