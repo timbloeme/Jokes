@@ -3,6 +3,8 @@ package com.example.jokes;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
@@ -28,7 +31,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        // make the logo in the action bar clickabe
+        // make the logo in the action bar clickable
         getActionBar().setDisplayHomeAsUpEnabled(true);
         
         // set jokes list to most recent / most popular
@@ -57,6 +60,13 @@ public class MainActivity extends Activity {
             // Set jokes list to most recent
             break;
             
+        case R.id.action_random:
+        	Log.v("TEST","Random");
+        	break;
+        
+        case R.id.action_search:
+        	Log.v("TEST","Search");
+        	break;
         }
 
         return true;
@@ -64,8 +74,22 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        Log.v("TEST", "createOptionsMenu");
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        
+        Log.v("TEST", "get searchManager");
+        // Add SearchWidget.
+        SearchManager searchManager = (SearchManager) getSystemService( Context.SEARCH_SERVICE );
+        Log.v("TEST", "get searchView");
+        SearchView searchView = (SearchView) menu.findItem( R.id.action_search ).getActionView();
+
+        Log.v("TEST", "set searchable");
+        if(null!=searchManager ) {   
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+           }
+       searchView.setIconifiedByDefault(false);
+        
         return true;
     }
     

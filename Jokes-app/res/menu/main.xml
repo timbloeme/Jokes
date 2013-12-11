@@ -5,6 +5,7 @@
         android:orderInCategory="90"
         android:showAsAction="always"
         android:icon="@drawable/search"
+        android:actionViewClass="android.widget.SearchView"
         android:title="Search"/>
     
     <item
