@@ -43,8 +43,9 @@ public class MainActivity extends Activity {
         // set jokes list to most recent / most popular
         ArrayList<String> jokes = new ArrayList<String>();
         Log.v("TEST","get joke");
-        //rest.get_joke("http://www.timbloeme.nl/app/getjokes.php", "1");
+        rest.get_joke("http://www.timbloeme.nl/app/getjokes.php", "1");
         Log.v("TEST","get joke succes");
+        
         jokes.add("#1");
         jokes.add("#2");
         jokes.add("#3");
