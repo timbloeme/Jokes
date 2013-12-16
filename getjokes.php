@@ -4,24 +4,36 @@
     $id = urldecode($_POST['id']);
     $ids = explode(",",id);
     $nr_ids = count(ids)
-    // Get Post Data
-    $q = "SELECT * FROM jokes " 
-       
+    
     $jsonData      = array();
     $jsonTempData  = array();
-      
-     for($i=0; $i<nr_ids; $i++){
-          $result = mysqli_query($con,"SELECT * FROM jokes WHERE id ="+ids[0]);
-          
-          $jsonTempData['tittle']         = $results[2];
-          $jsonTempData['joke']       = $results[3];
-          $jsonTempData['uid']   = $results[1];
-           
-          $jsonData[] = $jsonTempData;
-       }
+    
+    $q = "SELECT * FROM jokes " 
+    
+    if(ids[0]=="0"){
+        $result = mysqli_query($con,"SELECT * FROM jokes ORDER BY id DESC LIMIT 10");
+        while($row = mysqli_fetch_array($result)){
+            $jsonTempData['tittle']= $row[2];
+            $jsonTempData['joke']  = $row[3];
+            $jsonTempData['uid']   = $row[1];
+        }
+         
+        $jsonData[] = $jsonTempData;    
+    }else{
+        for($i=0; $i<nr_ids; $i++){
+            $result = mysqli_query($con,"SELECT * FROM jokes WHERE id ="+ids[0]);
+            $row = mysqli_fetch_array($result)
+            
+            $jsonTempData['tittle']= $row[2];
+            $jsonTempData['joke']  = $row[3];
+            $jsonTempData['uid']   = $row[1];
+             
+            $jsonData[] = $jsonTempData;
+        }
+    }
      
-     $outputArr = array();
-     $outputArr['Android'] = $jsonData;
+    $outputArr = array();
+    $outputArr['Android'] = $jsonData;
       
      // Encode Array To JSON Data
      print_r( json_encode($outputArr));
