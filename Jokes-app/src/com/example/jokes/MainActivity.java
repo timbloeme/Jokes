@@ -29,6 +29,8 @@ public class MainActivity extends Activity {
 
 	public static final int NORMAL_BAR = 0;
 	public static final int SEARCH_BAR = 1;
+	
+	public Rest rest = new Rest();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,9 @@ public class MainActivity extends Activity {
         
         // set jokes list to most recent / most popular
         ArrayList<String> jokes = new ArrayList<String>();
+        Log.v("TEST","get joke");
+        //rest.get_joke("http://www.timbloeme.nl/app/getjokes.php", "1");
+        Log.v("TEST","get joke succes");
         jokes.add("#1");
         jokes.add("#2");
         jokes.add("#3");
@@ -107,24 +112,6 @@ public class MainActivity extends Activity {
                             showJoke(item);
                     }
             });
-            
-            /*
-            Best wel grappig, verwijder een item uit de list met een animatie
-            
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
-                            final String item = (String) parent.getItemAtPosition(position);
-                            view.animate().setDuration(2000).alpha(0).withEndAction(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                            list.remove(item);
-                                            adapter.notifyDataSetChanged();
-                                            view.setAlpha(1);
-                                    }
-                            });
-                    }
-            });*/
             
     }
     
@@ -194,8 +181,6 @@ public class MainActivity extends Activity {
             		error.setText("You need to fill in every field");
             	}
             	else {
-            	
-            		// set Joke in database
                 	
                 	View b = findViewById(R.id.createButton);
                 	b.setVisibility(View.VISIBLE);
