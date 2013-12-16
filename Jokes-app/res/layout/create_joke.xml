@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+	    
+	<EditText
+	    android:id="@+id/create_joke_name"
+    	android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    	android:hint="@string/joke_name"
+    	android:inputType="text|textCapWords"/>
+	    
+	<EditText
+	    android:id="@+id/create_joke_content"
+    	android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    	android:hint="@string/joke_content"
+    	android:inputType="text|textCapSentences|textMultiLine"/>
+	    
+	<EditText
+	    android:id="@+id/create_joke_author"
+    	android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    	android:hint="@string/joke_author"
+    	android:inputType="text|textCapWords"/>
+	
+	<Button
+	    android:id="@+id/createJokeButton"
+    	android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    	android:text="@string/create_joke_button"/>
+	
+	<TextView
+	    android:id="@+id/error"
+    	android:layout_width="match_parent"
+    	android:layout_height="wrap_content"/>
+    
+</LinearLayout>

@@ -9,6 +9,8 @@
     <string name="edit_button">Edit</string>
     <string name="favorites_button">Favorites</string>
     <string name="profile_button">Profile</string>
+    <string name="search_button">Search</string>
+    <string name="create_joke_button">Create Joke</string>
 
     <!-- Profile layout -->
     <string name="profile_name">Name:</string>
@@ -20,6 +22,9 @@
     <!-- Joke layout -->
     <string name="joke_name">Name:</string>
     <string name="joke_author">Author:</string>
+    
+    <!-- Create joke layout  -->
+    <string name="joke_content">Content:</string>
 
     <!-- Search bar -->
     <string name="search_hint">Search Jokes</string>

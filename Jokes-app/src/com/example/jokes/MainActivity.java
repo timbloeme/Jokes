@@ -3,8 +3,6 @@ package com.example.jokes;
 import java.util.ArrayList;
 
 import android.app.Activity;
-import android.app.SearchManager;
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -12,8 +10,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
@@ -25,6 +24,10 @@ public class MainActivity extends Activity {
 	public static final int JOKES_LIST = 0;
 	public static final int JOKE	   = 1;
 	public static final int PROFILE    = 2;
+	public static final int CREATE_JOKE= 3;
+
+	public static final int NORMAL_BAR = 0;
+	public static final int SEARCH_BAR = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +52,15 @@ public class MainActivity extends Activity {
     
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         int itemId = item.getItemId();
+        ViewFlipper tf;
         
         switch (itemId) {
         
         case android.R.id.home:
-        	ViewFlipper vf = (ViewFlipper) findViewById(R.id.viewFlipper);
+        	ViewFlipper vf = (ViewFlipper) findViewById(R.id.bottomFlipper);
         	vf.setDisplayedChild(HOME);
+        	tf = (ViewFlipper) findViewById(R.id.topFlipper);
+        	tf.setDisplayedChild(NORMAL_BAR);
         	TextView tv = (TextView) findViewById(R.id.jokes_list_title);
         	tv.setText("Most recent jokes:");
             // Set jokes list to most recent
@@ -65,7 +71,8 @@ public class MainActivity extends Activity {
         	break;
         
         case R.id.action_search:
-        	Log.v("TEST","Search");
+        	tf = (ViewFlipper) findViewById(R.id.topFlipper);
+        	tf.setDisplayedChild(SEARCH_BAR);
         	break;
         }
 
@@ -74,21 +81,8 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        Log.v("TEST", "createOptionsMenu");
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-        
-        Log.v("TEST", "get searchManager");
-        // Add SearchWidget.
-        SearchManager searchManager = (SearchManager) getSystemService( Context.SEARCH_SERVICE );
-        Log.v("TEST", "get searchView");
-        SearchView searchView = (SearchView) menu.findItem( R.id.action_search ).getActionView();
-
-        Log.v("TEST", "set searchable");
-        if(null!=searchManager ) {   
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-           }
-       searchView.setIconifiedByDefault(false);
         
         return true;
     }
@@ -128,33 +122,81 @@ public class MainActivity extends Activity {
     	
     }
     
-    // voor nu wordt er een string meegegeven, dit moet uiteindelijk een Joke element worden
     public void showJoke(String joke){
-    	ViewFlipper vf = (ViewFlipper) findViewById(R.id.viewFlipper);
+    	ViewFlipper vf = (ViewFlipper) findViewById(R.id.bottomFlipper);
     	vf.setDisplayedChild(JOKE);
     	TextView tv = (TextView) findViewById(R.id.joke_name);
     	tv.setText(joke);
     }
     
     public void showSearchedJokes(View view) {
-    	ViewFlipper vf = (ViewFlipper) findViewById(R.id.viewFlipper);
+    	ViewFlipper vf = (ViewFlipper) findViewById(R.id.bottomFlipper);
     	vf.setDisplayedChild(JOKES_LIST);
     	TextView tv = (TextView) findViewById(R.id.jokes_list_title);
     	tv.setText("Found jokes:");
-    	// set jokes list
+
+    	EditText edit = (EditText) findViewById(R.id.search_text);
+    	String search = edit.getText().toString();
+    	
+    	// find jokes with search in the name / author name
+    	
+    	ArrayList<String> jokes = new ArrayList<String>();
+    	jokes.add("#1 " + search);
+    	jokes.add("#2 " + search);
+    	jokes.add("#3 " + search);
+    	setJokes(jokes);
     }
     
     public void showProfile(View view) {
-    	ViewFlipper vf = (ViewFlipper) findViewById(R.id.viewFlipper);
+    	ViewFlipper vf = (ViewFlipper) findViewById(R.id.bottomFlipper);
     	vf.setDisplayedChild(PROFILE);
+    	
     	// get profile and show
     }
     
     public void showFavorites(View view) {
-    	ViewFlipper vf = (ViewFlipper) findViewById(R.id.viewFlipper);
+    	ViewFlipper vf = (ViewFlipper) findViewById(R.id.bottomFlipper);
     	vf.setDisplayedChild(FAVORITES);
     	TextView tv = (TextView) findViewById(R.id.jokes_list_title);
     	tv.setText("Your favorite jokes:");
+    	
     	// set jokes list
+    }
+    
+    public void createJoke(View view) {
+    	ViewFlipper vf = (ViewFlipper) findViewById(R.id.bottomFlipper);
+    	vf.setDisplayedChild(CREATE_JOKE);
+    	
+    	View b = findViewById(R.id.createButton);
+    	b.setVisibility(View.GONE);
+    	
+    	final Button button = (Button) findViewById(R.id.createJokeButton);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+            	TextView error = (TextView) findViewById(R.id.error);
+            	
+            	EditText edit = (EditText) findViewById(R.id.create_joke_name);
+            	String name = edit.getText().toString();
+
+            	edit = (EditText) findViewById(R.id.create_joke_content);
+            	String content = edit.getText().toString();
+
+            	edit = (EditText) findViewById(R.id.create_joke_author);
+            	String author = edit.getText().toString();
+            	
+            	if (name.equals("") || content.equals("") || author.equals("")) {
+            		error.setText("You need to fill in every field");
+            	}
+            	else {
+            	
+            		// set Joke in database
+                	
+                	View b = findViewById(R.id.createButton);
+                	b.setVisibility(View.VISIBLE);
+                	
+            		showJoke(name);
+            	}
+            }
+        });
     }
 }
