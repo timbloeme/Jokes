@@ -17,11 +17,11 @@
     <!-- Joke list layout  -->
     <string name="joke_list_title">Most recent jokes:</string>
     
-	<!-- Joke layout  -->
-	<string name="joke_name">Name:</string>
-	<string name="joke_author">Author:</string>
-	
-	<!-- Search bar -->
-	<string name="search_hint">Search Jokes</string>
-	<string name="app_label">Jokes</string>
+        <!-- Joke layout  -->
+        <string name="joke_name">Name:</string>
+        <string name="joke_author">Author:</string>
+        
+        <!-- Search bar -->
+        <string name="search_hint">Search Jokes</string>
+        <string name="app_label">Jokes</string>
 </resources>

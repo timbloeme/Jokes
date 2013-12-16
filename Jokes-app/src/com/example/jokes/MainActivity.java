@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,12 +15,12 @@ import android.widget.ViewFlipper;
 
 public class MainActivity extends Activity {
 
-	// favorites and home are nothing more than a special jokes_list
-	public static final int FAVORITES  = 0;
-	public static final int HOME       = 0;
-	public static final int JOKES_LIST = 0;
-	public static final int JOKE	   = 1;
-	public static final int PROFILE    = 2;
+        // favorites and home are nothing more than a special jokes_list
+        public static final int FAVORITES  = 0;
+        public static final int HOME       = 0;
+        public static final int JOKES_LIST = 0;
+        public static final int JOKE       = 1;
+        public static final int PROFILE    = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +40,11 @@ public class MainActivity extends Activity {
         jokes.add("#6");
         jokes.add("#7");
         jokes.add("#8");
+        jokes.add("#9");
+        jokes.add("#10");
+        jokes.add("#11");
+        jokes.add("#12");
+        jokes.add("#13");
         setJokes(jokes);
     }
     
@@ -50,10 +54,10 @@ public class MainActivity extends Activity {
         switch (itemId) {
         
         case android.R.id.home:
-        	ViewFlipper vf = (ViewFlipper) findViewById(R.id.viewFlipper);
-        	vf.setDisplayedChild(HOME);
-        	TextView tv = (TextView) findViewById(R.id.jokes_list_title);
-        	tv.setText("Most recent jokes:");
+                ViewFlipper vf = (ViewFlipper) findViewById(R.id.viewFlipper);
+                vf.setDisplayedChild(HOME);
+                TextView tv = (TextView) findViewById(R.id.jokes_list_title);
+                tv.setText("Most recent jokes:");
             // Set jokes list to most recent
             break;
             
@@ -70,67 +74,67 @@ public class MainActivity extends Activity {
     }
     
     public void setJokes(ArrayList<String> jokes){
-    	final ArrayList<String> list = jokes;
-    	ListView listView = (ListView) findViewById(R.id.jokes_list);
-    	final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list);
-    	listView.setAdapter(adapter);
-    	
-    	listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-    		@Override
-    		public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
-    			final String item = (String) parent.getItemAtPosition(position);
-    			// pak het Joke element en geef deze mee aan showJoke
-    			showJoke(item);
-    		}
-    	});
-    	
-    	/*
-    	Best wel grappig, verwijder een item uit de list met een animatie
-    	
-    	listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-    		@Override
-    		public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
-    			final String item = (String) parent.getItemAtPosition(position);
-    			view.animate().setDuration(2000).alpha(0).withEndAction(new Runnable() {
-    				@Override
-    				public void run() {
-    					list.remove(item);
-    					adapter.notifyDataSetChanged();
-    					view.setAlpha(1);
-    				}
-    			});
-    		}
-    	});*/
-    	
+            final ArrayList<String> list = jokes;
+            ListView listView = (ListView) findViewById(R.id.jokes_list);
+            final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list);
+            listView.setAdapter(adapter);
+            
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
+                            final String item = (String) parent.getItemAtPosition(position);
+                            // pak het Joke element en geef deze mee aan showJoke
+                            showJoke(item);
+                    }
+            });
+            
+            /*
+            Best wel grappig, verwijder een item uit de list met een animatie
+            
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
+                            final String item = (String) parent.getItemAtPosition(position);
+                            view.animate().setDuration(2000).alpha(0).withEndAction(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                            list.remove(item);
+                                            adapter.notifyDataSetChanged();
+                                            view.setAlpha(1);
+                                    }
+                            });
+                    }
+            });*/
+            
     }
     
     // voor nu wordt er een string meegegeven, dit moet uiteindelijk een Joke element worden
     public void showJoke(String joke){
-    	ViewFlipper vf = (ViewFlipper) findViewById(R.id.viewFlipper);
-    	vf.setDisplayedChild(JOKE);
-    	TextView tv = (TextView) findViewById(R.id.joke_name);
-    	tv.setText(joke);
+            ViewFlipper vf = (ViewFlipper) findViewById(R.id.viewFlipper);
+            vf.setDisplayedChild(JOKE);
+            TextView tv = (TextView) findViewById(R.id.joke_name);
+            tv.setText(joke);
     }
     
     public void showSearchedJokes(View view) {
-    	ViewFlipper vf = (ViewFlipper) findViewById(R.id.viewFlipper);
-    	vf.setDisplayedChild(JOKES_LIST);
-    	TextView tv = (TextView) findViewById(R.id.jokes_list_title);
-    	tv.setText("Found jokes:");
-    	// set jokes list
+            ViewFlipper vf = (ViewFlipper) findViewById(R.id.viewFlipper);
+            vf.setDisplayedChild(JOKES_LIST);
+            TextView tv = (TextView) findViewById(R.id.jokes_list_title);
+            tv.setText("Found jokes:");
+            // set jokes list
     }
     
     public void showProfile(View view) {
-    	ViewFlipper vf = (ViewFlipper) findViewById(R.id.viewFlipper);
-    	vf.setDisplayedChild(PROFILE);
-    	// get profile and show
+            ViewFlipper vf = (ViewFlipper) findViewById(R.id.viewFlipper);
+            vf.setDisplayedChild(PROFILE);
+            // get profile and show
     }
     
     public void showFavorites(View view) {
-    	ViewFlipper vf = (ViewFlipper) findViewById(R.id.viewFlipper);
-    	vf.setDisplayedChild(FAVORITES);
-    	TextView tv = (TextView) findViewById(R.id.jokes_list_title);
-    	tv.setText("Your favorite jokes:");
-    	// set jokes list
+            ViewFlipper vf = (ViewFlipper) findViewById(R.id.viewFlipper);
+            vf.setDisplayedChild(FAVORITES);
+            TextView tv = (TextView) findViewById(R.id.jokes_list_title);
+            tv.setText("Your favorite jokes:");
+            // set jokes list
     }
 }

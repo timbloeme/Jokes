@@ -14,34 +14,34 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         
-       	<Button
-       	    android:layout_width="wrap_content"
-       	    android:layout_height="wrap_content"
-       	    android:layout_weight="1"
-       	    android:text="@string/profile_button"
-       	    android:onClick="showProfile"/>
-       	
-       	<Button
-       	    android:layout_width="wrap_content"
-       	    android:layout_height="wrap_content"
-       	    android:layout_weight="1"
-       	    android:text="@string/favorites_button"
-       	    android:onClick="showFavorites"/>
+               <Button
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_weight="1"
+                   android:text="@string/profile_button"
+                   android:onClick="showProfile"/>
+               
+               <Button
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_weight="1"
+                   android:text="@string/favorites_button"
+                   android:onClick="showFavorites"/>
         
     </LinearLayout>
 
-	<ViewFlipper
-	    android:id="@+id/viewFlipper"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_below="@id/top_bar">
-	    
-	    <include layout="@layout/joke_list"/>
-	    
-	    <include layout="@layout/joke"/>
-	    
-	    <include layout="@layout/profile"/>
-	    
-	</ViewFlipper>
+        <ViewFlipper
+            android:id="@+id/viewFlipper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/top_bar">
+            
+            <include layout="@layout/joke_list"/>
+            
+            <include layout="@layout/joke"/>
+            
+            <include layout="@layout/profile"/>
+            
+        </ViewFlipper>
 
 </RelativeLayout>
