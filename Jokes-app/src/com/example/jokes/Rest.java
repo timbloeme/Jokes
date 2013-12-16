@@ -2,7 +2,6 @@ package com.example.jokes;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -14,41 +13,37 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
+import android.app.Dialog;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
  
-public class Rest extends Activity {      
-      
-    // Class with extends AsyncTask class
-     
-    private class db_connection  extends AsyncTask<String, Void, Void> {
+public class Rest extends AsyncTask<String, Void, Void> {
+	
+		private Activity ac = new Activity();
           
         // Required initialization
          
         private final HttpClient Client = new DefaultHttpClient();
         private String Content;
         private String Error = null;
-        private ProgressDialog Dialog = new ProgressDialog(Rest.this);
         private int initial_load = 10;
         String data =""; 
-        TextView uiUpdate = (TextView) findViewById(R.id.output);
-        TextView jsonParsed = (TextView) findViewById(R.id.jsonParsed);
         int sizeData = 0;  
-        EditText serverText = (EditText) findViewById(R.id.serverText);
          
          
 
-        protected int add_joke(String url, String tittle, String joke, int uid){
+        public int add_joke(String url, String title, String joke, int uid){
         	String[] to_send = new String[2];
         	
-        	Dialog.setMessage("Please wait..");
-            Dialog.show();
-        	
-        	data ="&" + URLEncoder.encode("tittle", "UTF-8") + "=" + tittle;
-        	data +="&" + URLEncoder.encode("joke", "UTF-8") + "=" + joke;
-        	data +="&" + URLEncoder.encode("uid", "UTF-8") + "=" + String.valueOf(uid);
+        	try{
+        		data ="&" + URLEncoder.encode("title", "UTF-8") + "=" + title;
+        		data +="&" + URLEncoder.encode("joke", "UTF-8") + "=" + joke;
+        		data +="&" + URLEncoder.encode("uid", "UTF-8") + "=" + String.valueOf(uid);
+			}catch(Exception e){
+				Log.v("error",String.valueOf(e));
+			}
         	
         	to_send[0] = url;
         	to_send[1] = data;
@@ -61,29 +56,14 @@ public class Rest extends Activity {
         	return 1;
         }
         
-        protected int delete_joke(String url, int id){
+        public int delete_joke(String url, int id){
         	String[] to_send = new String[2];
         	
-        	
-        	data ="&" + URLEncoder.encode("uid", "UTF-8") + "=" + String.valueOf(id);
-        	
-        	to_send[0] = url;
-        	to_send[1] = data;
-        	
-        	doInBackground(to_send);
-        	
-        	Dialog.dismiss();
-        	
-        	return 1;
-        }
-        
-        protected int update_joke(String url, String tittle, String joke, int id, int uid){
-        	String[] to_send = new String[2];
-        	
-        	data ="&" + URLEncoder.encode("tittle", "UTF-8") + "=" + tittle;
-        	data +="&" + URLEncoder.encode("joke", "UTF-8") + "=" + joke;
-        	data +="&" + URLEncoder.encode("uid", "UTF-8") + "=" + String.valueOf(uid);
-        	data +="&" + URLEncoder.encode("id", "UTF-8") + "=" + String.valueOf(id);
+        	try{
+        		data ="&" + URLEncoder.encode("uid", "UTF-8") + "=" + String.valueOf(id);
+        	}catch(Exception e){
+        		Log.v("error",String.valueOf(e));
+        	}
         	
         	to_send[0] = url;
         	to_send[1] = data;
@@ -93,13 +73,37 @@ public class Rest extends Activity {
         	return 1;
         }
         
-        protected int get_joke(String url, String id){
+        public int update_joke(String url, String title, String joke, int id, int uid){
+        	String[] to_send = new String[2];
+        	
+        	try{
+        		data ="&" + URLEncoder.encode("title", "UTF-8") + "=" + title;
+        		data +="&" + URLEncoder.encode("joke", "UTF-8") + "=" + joke;
+        		data +="&" + URLEncoder.encode("uid", "UTF-8") + "=" + String.valueOf(uid);
+        		data +="&" + URLEncoder.encode("id", "UTF-8") + "=" + String.valueOf(id);
+        	}catch(Exception e){
+        		Log.v("error",String.valueOf(e));
+        	}
+        	
+        	to_send[0] = url;
+        	to_send[1] = data;
+        	
+        	doInBackground(to_send);
+        	
+        	return 1;
+        }
+        
+        public int get_joke(String url, String id){
         	String[] to_send = new String[2]; 
             
             String OutputData = "";
-            JSONObject jsonResponse;       	
- 
-        	data ="&" + URLEncoder.encode("id", "UTF-8") + "=" + id;
+            JSONObject jsonResponse;
+            
+            try{
+            	data ="&" + URLEncoder.encode("id", "UTF-8") + "=" + id;
+    		}catch(Exception e){
+    			Log.v("error",String.valueOf(e));
+    		}
         	
         	to_send[0] = url;
         	to_send[1] = data;
@@ -124,19 +128,18 @@ public class Rest extends Activity {
                     JSONObject jsonChildNode = jsonMainNode.getJSONObject(i);
                       
                     /******* Fetch node values **********/
-                    String J_tittle       = jsonChildNode.optString("tittle").toString();
+                    String J_title       = jsonChildNode.optString("title").toString();
                     String J_joke     = jsonChildNode.optString("joke").toString();
                     String J_user = jsonChildNode.optString("user").toString();
                       
                     
-                    OutputData += "Tittle           : "+ J_tittle + "Joke      : "+ J_joke + "User                : "+ J_user;
+                    OutputData += "title           : "+ J_title + "Joke      : "+ J_joke + "User                : "+ J_user;
                     
                      
                }
             /****************** End Parse Response JSON Data *************/    
                  
                 //Show Parsed Output on screen (activity)
-                jsonParsed.setText( OutputData );
            }catch (JSONException e) {
                
                e.printStackTrace();
@@ -206,17 +209,11 @@ public class Rest extends Activity {
         protected void onPostExecute(Void unused) {
             // NOTE: You can call UI Element here.
               
-            // Close progress dialog
-            Dialog.dismiss();
-              
             if (Error != null) {
-                  
-                uiUpdate.setText("Output : "+Error);
                   
             } else {
                
                 // Show Response Json On Screen (activity)
-                uiUpdate.setText( Content );
                  
              /****************** Start Parse Response JSON Data *************/
                  
@@ -242,19 +239,18 @@ public class Rest extends Activity {
                          JSONObject jsonChildNode = jsonMainNode.getJSONObject(i);
                            
                          /******* Fetch node values **********/
-                         String tittle       = jsonChildNode.optString("tittle").toString();
+                         String title       = jsonChildNode.optString("title").toString();
                          String joke     = jsonChildNode.optString("joke").toString();
                          String user = jsonChildNode.optString("user").toString();
                            
                          
-                         OutputData += "Tittle           : "+ tittle + "Joke      : "+ joke + "User                : "+ user;
+                         OutputData += "title           : "+ title + "Joke      : "+ joke + "User                : "+ user;
                          
                           
                     }
                  /****************** End Parse Response JSON Data *************/    
                       
                      //Show Parsed Output on screen (activity)
-                     jsonParsed.setText( OutputData );
                       
                        
                  } catch (JSONException e) {
@@ -265,7 +261,5 @@ public class Rest extends Activity {
                   
              }
         }
-          
-    }
      
 }
