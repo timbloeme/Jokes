@@ -1,5 +1,7 @@
 package com.example.jokes;
 
+import android.util.Log;
+
 public class Joke {
     int _id;
     String _title;
@@ -41,7 +43,7 @@ public class Joke {
     }
      
     // setting title
-    public void setTitle(String _joke){
+    public void setTitle(String _title){
         this._title = _title;
     }
 

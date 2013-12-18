@@ -8,8 +8,10 @@ import java.util.List;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
 	// All Static variables
@@ -56,6 +58,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	SQLiteDatabase db = this.getWritableDatabase();
     	 
         ContentValues values = new ContentValues();
+        values.put(KEY_TITLE, joke.getTitle()); // title of the joke
         values.put(KEY_CONTENT, joke.getContent()); // Joke
         values.put(KEY_UID, joke.getUID()); // author id of joke
      
@@ -69,7 +72,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	SQLiteDatabase db = this.getReadableDatabase();
     	 
         Cursor cursor = db.query(TABLE_JOKES, new String[] { KEY_ID,
-                KEY_CONTENT, KEY_UID }, KEY_ID + "=?",
+                KEY_TITLE, KEY_CONTENT, KEY_UID }, KEY_ID + "=?",
                 new String[] { String.valueOf(id) }, null, null, null, null);
         if (cursor != null)
             cursor.moveToFirst();
@@ -79,11 +82,37 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         // return joke
         return joke;
     }
+    
+   // Getting single joke
+   public Joke getJoke(String title) {
+
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_JOKES + " WHERE title='" + title +"'";
+     
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+     
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            Joke joke = new Joke();
+            joke.setID(Integer.parseInt(cursor.getString(0)));
+            joke.setTitle(cursor.getString(1));
+            joke.setContent(cursor.getString(2));
+            joke.setUID(Integer.parseInt(cursor.getString(3)));
+            return joke;
+        }
+     
+    
+       Joke joke = new Joke(Integer.parseInt(cursor.getString(0)), cursor.getString(1),
+       					 cursor.getString(2), Integer.parseInt(cursor.getString(3)));
+       // return joke
+       return joke;
+   }
 
     public List<Joke> searchJokes(String search) {
         List<Joke> jokeList = new ArrayList<Joke>();
-        // Select All Query
-        String selectQuery = "SELECT  * FROM " + TABLE_JOKES + " WHERE title LIKE %" + search.toLowerCase() +"%";
+        // Query for the jokes with title that is like the search
+        String selectQuery = "SELECT  * FROM " + TABLE_JOKES + " WHERE title LIKE '%" + search + "%'";
      
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -91,15 +120,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
-                String title = cursor.getString(1);
-                if (title.toLowerCase().contains(search.toLowerCase())){
-                    Joke joke = new Joke();
-                    joke.setID(Integer.parseInt(cursor.getString(0)));
-                    joke.setTitle(cursor.getString(1));
-                    joke.setContent(cursor.getString(2));
-                    joke.setUID(Integer.parseInt(cursor.getString(3)));
-                    jokeList.add(joke);
-                }
+                Joke joke = new Joke();
+                joke.setID(Integer.parseInt(cursor.getString(0)));
+                joke.setTitle(cursor.getString(1));
+                joke.setContent(cursor.getString(2));
+                joke.setUID(Integer.parseInt(cursor.getString(3)));
+                jokeList.add(joke);
             } while (cursor.moveToNext());
         }
      
@@ -181,13 +207,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      
     // Getting jokes Count
     public int getJokesCount() {
-        String countQuery = "SELECT  * FROM " + TABLE_JOKES;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(countQuery, null);
-        cursor.close();
-
-        // return count
-        return cursor.getCount();
+        SQLiteDatabase db = this.getWritableDatabase();
+    	return (int)DatabaseUtils.queryNumEntries(db,TABLE_JOKES);
     }
 }
     

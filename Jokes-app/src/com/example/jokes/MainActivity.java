@@ -2,9 +2,11 @@ package com.example.jokes;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,15 +41,21 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
+        // empty the db for testing purposes
+        List<Joke> temp = db.getAllJokes();
+        for(Joke joke: temp){
+        	db.deleteJoke(joke);
+        }
+        
         // make the logo in the action bar clickable
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
-        db.addJoke(new Joke("#1","Joking",1));
-        db.addJoke(new Joke("#2","Joking",1));
-        db.addJoke(new Joke("#3","Joking",2));
-        db.addJoke(new Joke("#4","Joking",2));
+        db.addJoke(new Joke("#1","Joking1",1));
+        db.addJoke(new Joke("#2","Joking2",1));
+        db.addJoke(new Joke("#3","Joking3",2));
+        db.addJoke(new Joke("#4","Joking4",2));
 
-        List<Joke> jokes = db.getRecentJokes();
+        List<Joke> jokes = db.getAllJokes();
 
         setJokes(jokes);
     }
@@ -65,13 +73,17 @@ public class MainActivity extends Activity {
         	tf.setDisplayedChild(NORMAL_BAR);
         	TextView tv = (TextView) findViewById(R.id.jokes_list_title);
         	tv.setText("Most recent jokes:");
-            // Set jokes list to most recent
+        	
+        	List<Joke> jokes = db.getAllJokes();
+            setJokes(jokes);
+            
             break;
             
         case R.id.action_random:
-            int max = db.getJokesCount();
-            // get random number between 0 - max
-            int rnd = 2;
+            int max = db.getJokesCount() - 1;
+            // get random joke with id between 0 - max
+            Random r = new Random();
+            int rnd = r.nextInt(max);
             showJoke(db.getJoke(rnd));
         	break;
         
@@ -102,12 +114,13 @@ public class MainActivity extends Activity {
         listView.setAdapter(adapter);
         
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
-                        final Joke item = (Joke) parent.getItemAtPosition(position);
-                        // pak het Joke element en geef deze mee aan showJoke
-                        showJoke(item);
-                }
+            @Override
+            public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
+                //pak het Joke element en geef deze mee aan showJoke
+              	final String item = (String) parent.getItemAtPosition(position);
+              	Joke joke = db.getJoke(item);
+                showJoke(joke);
+            }
         });
     }
     
@@ -118,7 +131,7 @@ public class MainActivity extends Activity {
         tv.setText(joke.getTitle());
         tv = (TextView) findViewById(R.id.joke_content);
         tv.setText(joke.getContent());
-        tv = (TextView) findViewById(R.id.joke_name);
+        tv = (TextView) findViewById(R.id.joke_author);
         tv.setText(String.valueOf(joke.getUID()));
     }
     
@@ -132,7 +145,6 @@ public class MainActivity extends Activity {
     	String search = edit.getText().toString();
     	
     	// find jokes with search in the name / author name
-    	
     	List<Joke> jokes = db.searchJokes(search);
     	setJokes(jokes);
     }
