@@ -6,25 +6,25 @@ public class Joke {
     int _id;
     String _title;
     String _content;
-    int _uid;
+    String _user;
      
     // Empty constructor
     public Joke(){
          
     }
     // constructor
-    public Joke(int _id, String _title, String _content, int _uid){
+    public Joke(int _id, String _title, String _content, String _user){
         this._id = _id;
         this._title = _title;
         this._content = _content;
-        this._uid = _uid;
+        this._user = _user;
     }
      
     // constructor
-    public Joke(String _title, String _content, int _uid){
+    public Joke(String _title, String _content, String _user){
         this._title = _title;
         this._content = _content;
-        this._uid = _uid;
+        this._user = _user;
     }
 
     // getting ID
@@ -55,14 +55,14 @@ public class Joke {
         this._content = _content;
     }
      
-    // getting uid
-    public int getUID(){
-        return this._uid;
+    // getting user
+    public String getUser(){
+        return this._user;
     }
      
-    // setting uid
-    public void setUID(int _uid){
-        this._uid = _uid;
+    // setting user
+    public void setUser(String _user){
+        this._user = _user;
     }
 
 }

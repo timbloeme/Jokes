@@ -50,10 +50,10 @@ public class MainActivity extends Activity {
         // make the logo in the action bar clickable
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
-        db.addJoke(new Joke("#1","Joking1",1));
-        db.addJoke(new Joke("#2","Joking2",1));
-        db.addJoke(new Joke("#3","Joking3",2));
-        db.addJoke(new Joke("#4","Joking4",2));
+        db.addJoke(new Joke("#1","Joking1","Simone"));
+        db.addJoke(new Joke("#2","Joking2","Simone"));
+        db.addJoke(new Joke("#3","Joking3","Tim"));
+        db.addJoke(new Joke("#4","Joking4","Debbie"));
 
         List<Joke> jokes = db.getAllJokes();
 
@@ -132,7 +132,7 @@ public class MainActivity extends Activity {
         tv = (TextView) findViewById(R.id.joke_content);
         tv.setText(joke.getContent());
         tv = (TextView) findViewById(R.id.joke_author);
-        tv.setText(String.valueOf(joke.getUID()));
+        tv.setText(joke.getUser());
     }
     
     public void showSearchedJokes(View view) {
@@ -184,9 +184,9 @@ public class MainActivity extends Activity {
             	String content = edit.getText().toString();
 
             	edit = (EditText) findViewById(R.id.create_joke_author);
-            	int author = Integer.parseInt(edit.getText().toString());
+            	String author = edit.getText().toString();
             	
-            	if (name.equals("") || content.equals("") || author == 0) {
+            	if (name.equals("") || content.equals("") || author.equals("")) {
             		error.setText("You need to fill in every field");
             	}
             	else {

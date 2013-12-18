@@ -21,14 +21,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Database Name
     private static final String DATABASE_NAME = "jokesManager";
  
-    // highScores table name
+    // joke table name
     private static final String TABLE_JOKES = "jokes";
  
-    // highScores Table Columns names
+    // joke Table Columns names
     private static final String KEY_ID = "id";
     private static final String KEY_TITLE = "title";
     private static final String KEY_CONTENT = "content";
-    private static final String KEY_UID = "uid";
+    private static final String KEY_USER = "user";
  
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -39,11 +39,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String CREATE_JOKES_TABLE = "CREATE TABLE " + TABLE_JOKES + "("
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_TITLE + " TEXT,"
-                + KEY_CONTENT + " TEXT," + KEY_UID + " INTEGER" + ")";
+                + KEY_CONTENT + " TEXT," + KEY_USER + " INTEGER" + ")";
         db.execSQL(CREATE_JOKES_TABLE);
     }
  
-    // Upgrading database
+    // Upgrading database is needed if you want to extend SQLiteOpenHelper
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop older table if existed
@@ -60,30 +60,30 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(KEY_TITLE, joke.getTitle()); // title of the joke
         values.put(KEY_CONTENT, joke.getContent()); // Joke
-        values.put(KEY_UID, joke.getUID()); // author id of joke
+        values.put(KEY_USER, joke.getUser()); // author id of joke
      
         // Inserting Row
         db.insert(TABLE_JOKES, null, values);
         db.close(); // Closing database connection
     }
      
-    // Getting single joke
+    // Getting single joke with this id
     public Joke getJoke(int id) {
     	SQLiteDatabase db = this.getReadableDatabase();
     	 
         Cursor cursor = db.query(TABLE_JOKES, new String[] { KEY_ID,
-                KEY_TITLE, KEY_CONTENT, KEY_UID }, KEY_ID + "=?",
+                KEY_TITLE, KEY_CONTENT, KEY_USER }, KEY_ID + "=?",
                 new String[] { String.valueOf(id) }, null, null, null, null);
         if (cursor != null)
             cursor.moveToFirst();
      
         Joke joke = new Joke(Integer.parseInt(cursor.getString(0)), cursor.getString(1),
-        					 cursor.getString(2), Integer.parseInt(cursor.getString(3)));
+        					 cursor.getString(2), cursor.getString(3));
         // return joke
         return joke;
     }
     
-   // Getting single joke
+   // Getting single joke with this title
    public Joke getJoke(String title) {
 
         // Select All Query
@@ -98,21 +98,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             joke.setID(Integer.parseInt(cursor.getString(0)));
             joke.setTitle(cursor.getString(1));
             joke.setContent(cursor.getString(2));
-            joke.setUID(Integer.parseInt(cursor.getString(3)));
+            joke.setUser(cursor.getString(3));
             return joke;
         }
      
     
        Joke joke = new Joke(Integer.parseInt(cursor.getString(0)), cursor.getString(1),
-       					 cursor.getString(2), Integer.parseInt(cursor.getString(3)));
+       					 cursor.getString(2), cursor.getString(3));
        // return joke
        return joke;
    }
 
+   // Search the jokes table for jokes with title like the search string
     public List<Joke> searchJokes(String search) {
         List<Joke> jokeList = new ArrayList<Joke>();
         // Query for the jokes with title that is like the search
-        String selectQuery = "SELECT  * FROM " + TABLE_JOKES + " WHERE title LIKE '%" + search + "%'";
+        String selectQuery = "SELECT  * FROM " + TABLE_JOKES + " WHERE title LIKE '%" + search + "%' OR user LIKE '%" + search + "%'";
      
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -124,7 +125,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 joke.setID(Integer.parseInt(cursor.getString(0)));
                 joke.setTitle(cursor.getString(1));
                 joke.setContent(cursor.getString(2));
-                joke.setUID(Integer.parseInt(cursor.getString(3)));
+                joke.setUser(cursor.getString(3));
                 jokeList.add(joke);
             } while (cursor.moveToNext());
         }
@@ -149,7 +150,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 joke.setID(Integer.parseInt(cursor.getString(0)));
                 joke.setTitle(cursor.getString(1));
                 joke.setContent(cursor.getString(2));
-                joke.setUID(Integer.parseInt(cursor.getString(3)));
+                joke.setUser(cursor.getString(3));
                 jokeList.add(joke);
             } while (cursor.moveToNext());
         }
@@ -174,7 +175,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 joke.setID(Integer.parseInt(cursor.getString(0)));
                 joke.setTitle(cursor.getString(1));
                 joke.setContent(cursor.getString(2));
-                joke.setUID(Integer.parseInt(cursor.getString(3)));
+                joke.setUser(cursor.getString(3));
                 jokeList.add(joke);
             } while (cursor.moveToNext());
         }
@@ -190,7 +191,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(KEY_TITLE, joke.getTitle());
         values.put(KEY_CONTENT, joke.getContent());
-        values.put(KEY_UID, joke.getUID());
+        values.put(KEY_USER, joke.getUser());
      
         // updating row
         return db.update(TABLE_JOKES, values, KEY_ID + " = ?",
