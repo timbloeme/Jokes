@@ -29,6 +29,8 @@ public class MainActivity extends Activity {
 
 	public static final int NORMAL_BAR = 0;
 	public static final int SEARCH_BAR = 1;
+
+    public DatabaseHandler db = new DatabaseHandler();
 	
 	//public Rest rest = new Rest();
 
@@ -39,26 +41,14 @@ public class MainActivity extends Activity {
         
         // make the logo in the action bar clickable
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        
-        // set jokes list to most recent / most popular
-        ArrayList<String> jokes = new ArrayList<String>();
-        Log.v("TEST","get joke");
-        //rest.get_joke("http://www.timbloeme.nl/app/getjokes.php", "1");
-        Log.v("TEST","get joke succes");
-        
-        jokes.add("#1");
-        jokes.add("#2");
-        jokes.add("#3");
-        jokes.add("#4");
-        jokes.add("#5");
-        jokes.add("#6");
-        jokes.add("#7");
-        jokes.add("#8");
-        jokes.add("#9");
-        jokes.add("#10");
-        jokes.add("#11");
-        jokes.add("#12");
-        jokes.add("#13");
+
+        db.addJoke(new Joke("#1","Joking",1));
+        db.addJoke(new Joke("#2","Joking",1));
+        db.addJoke(new Joke("#3","Joking",2));
+        db.addJoke(new Joke("#4","Joking",2));
+
+        List<Jokes> jokes = db.getRecentJokes();
+
         setJokes(jokes);
     }
     
@@ -79,7 +69,10 @@ public class MainActivity extends Activity {
             break;
             
         case R.id.action_random:
-        	Log.v("TEST","Random");
+            int max = db.getJokesCount();
+            // get random number between 0 - max
+            int rnd = 2;
+            showJoke(db.getJoke(rnd));
         	break;
         
         case R.id.action_search:
@@ -99,28 +92,31 @@ public class MainActivity extends Activity {
         return true;
     }
     
-    public void setJokes(ArrayList<String> jokes){
-            final ArrayList<String> list = jokes;
-            ListView listView = (ListView) findViewById(R.id.jokes_list);
-            final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list);
-            listView.setAdapter(adapter);
-            
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
-                            final String item = (String) parent.getItemAtPosition(position);
-                            // pak het Joke element en geef deze mee aan showJoke
-                            showJoke(item);
-                    }
-            });
-            
+    public void setJokes(List<Joke> jokes){
+        final ArrayList<Joke> list = jokes;
+        ListView listView = (ListView) findViewById(R.id.jokes_list);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list);
+        listView.setAdapter(adapter);
+        
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
+                        final Joke item = (Joke) parent.getItemAtPosition(position);
+                        // pak het Joke element en geef deze mee aan showJoke
+                        showJoke(item);
+                }
+        });
     }
     
-    public void showJoke(String joke){
+    public void showJoke(Joke joke){
     	ViewFlipper vf = (ViewFlipper) findViewById(R.id.bottomFlipper);
     	vf.setDisplayedChild(JOKE);
-    	TextView tv = (TextView) findViewById(R.id.joke_name);
-    	tv.setText(joke);
+        TextView tv = (TextView) findViewById(R.id.joke_name);
+        tv.setText(joke.getTitle);
+        TextView tv = (TextView) findViewById(R.id.joke_content);
+        tv.setText(joke.getContent());
+        TextView tv = (TextView) findViewById(R.id.joke_name);
+        tv.setText(String.valueOf(joke.getUID()));
     }
     
     public void showSearchedJokes(View view) {
@@ -134,10 +130,7 @@ public class MainActivity extends Activity {
     	
     	// find jokes with search in the name / author name
     	
-    	ArrayList<String> jokes = new ArrayList<String>();
-    	jokes.add("#1 " + search);
-    	jokes.add("#2 " + search);
-    	jokes.add("#3 " + search);
+    	List<Joke> jokes = db.searchJokes(search);
     	setJokes(jokes);
     }
     
@@ -163,6 +156,9 @@ public class MainActivity extends Activity {
     	
     	View b = findViewById(R.id.createButton);
     	b.setVisibility(View.GONE);
+
+        String name, content;
+        int author;
     	
     	final Button button = (Button) findViewById(R.id.createJokeButton);
         button.setOnClickListener(new View.OnClickListener() {
@@ -170,13 +166,13 @@ public class MainActivity extends Activity {
             	TextView error = (TextView) findViewById(R.id.error);
             	
             	EditText edit = (EditText) findViewById(R.id.create_joke_name);
-            	String name = edit.getText().toString();
+            	name = edit.getText().toString();
 
             	edit = (EditText) findViewById(R.id.create_joke_content);
-            	String content = edit.getText().toString();
+            	content = edit.getText().toString();
 
             	edit = (EditText) findViewById(R.id.create_joke_author);
-            	String author = edit.getText().toString();
+            	author = edit.getText().valueOf();
             	
             	if (name.equals("") || content.equals("") || author.equals("")) {
             		error.setText("You need to fill in every field");
@@ -186,6 +182,8 @@ public class MainActivity extends Activity {
                 	View b = findViewById(R.id.createButton);
                 	b.setVisibility(View.VISIBLE);
                 	
+                    db.addJoke(name, content, author);
+
             		showJoke(name);
             	}
             }
