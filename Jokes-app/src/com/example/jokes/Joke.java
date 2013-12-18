@@ -1,4 +1,4 @@
-package com.example.hangman;
+package com.example.jokes;
 
 public class Joke {
     int _id;
@@ -21,7 +21,7 @@ public class Joke {
     // constructor
     public Joke(String _title, String _content, int _uid){
         this._title = _title;
-        this._content = _content
+        this._content = _content;
         this._uid = _uid;
     }
 

@@ -1,6 +1,6 @@
 // mede mogelijk gemaakt door: http://www.androidhive.info/2011/11/android-sqlite-database-tutorial/
 
-package com.example.hangman;
+package com.example.jokes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_TITLE + " TEXT,"
                 + KEY_CONTENT + " TEXT," + KEY_UID + " INTEGER" + ")";
         db.execSQL(CREATE_JOKES_TABLE);
-    }    
+    }
+ 
+    // Upgrading database
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        // Drop older table if existed
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_JOKES);
+ 
+        // Create tables again
+        onCreate(db);
+    }
     
     // Adding new joke
     public void addJoke(Joke joke) {
@@ -73,7 +83,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public List<Joke> searchJokes(String search) {
         List<Joke> jokeList = new ArrayList<Joke>();
         // Select All Query
-        String selectQuery = "SELECT  * FROM " + TABLE_JOKES + " WHERE title LIKE %" + search.toLowerCase +"%";
+        String selectQuery = "SELECT  * FROM " + TABLE_JOKES + " WHERE title LIKE %" + search.toLowerCase() +"%";
      
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -179,4 +189,5 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         // return count
         return cursor.getCount();
     }
+}
     

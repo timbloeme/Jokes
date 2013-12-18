@@ -1,10 +1,10 @@
 package com.example.jokes;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,7 +30,7 @@ public class MainActivity extends Activity {
 	public static final int NORMAL_BAR = 0;
 	public static final int SEARCH_BAR = 1;
 
-    public DatabaseHandler db = new DatabaseHandler();
+    public DatabaseHandler db = new DatabaseHandler(this);
 	
 	//public Rest rest = new Rest();
 
@@ -47,7 +47,7 @@ public class MainActivity extends Activity {
         db.addJoke(new Joke("#3","Joking",2));
         db.addJoke(new Joke("#4","Joking",2));
 
-        List<Jokes> jokes = db.getRecentJokes();
+        List<Joke> jokes = db.getRecentJokes();
 
         setJokes(jokes);
     }
@@ -93,7 +93,10 @@ public class MainActivity extends Activity {
     }
     
     public void setJokes(List<Joke> jokes){
-        final ArrayList<Joke> list = jokes;
+        final ArrayList<String> list = new ArrayList<String>();
+        for (Joke joke : jokes) {
+    		list.add(joke.getTitle());
+    	}
         ListView listView = (ListView) findViewById(R.id.jokes_list);
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list);
         listView.setAdapter(adapter);
@@ -112,10 +115,10 @@ public class MainActivity extends Activity {
     	ViewFlipper vf = (ViewFlipper) findViewById(R.id.bottomFlipper);
     	vf.setDisplayedChild(JOKE);
         TextView tv = (TextView) findViewById(R.id.joke_name);
-        tv.setText(joke.getTitle);
-        TextView tv = (TextView) findViewById(R.id.joke_content);
+        tv.setText(joke.getTitle());
+        tv = (TextView) findViewById(R.id.joke_content);
         tv.setText(joke.getContent());
-        TextView tv = (TextView) findViewById(R.id.joke_name);
+        tv = (TextView) findViewById(R.id.joke_name);
         tv.setText(String.valueOf(joke.getUID()));
     }
     
@@ -156,9 +159,6 @@ public class MainActivity extends Activity {
     	
     	View b = findViewById(R.id.createButton);
     	b.setVisibility(View.GONE);
-
-        String name, content;
-        int author;
     	
     	final Button button = (Button) findViewById(R.id.createJokeButton);
         button.setOnClickListener(new View.OnClickListener() {
@@ -166,15 +166,15 @@ public class MainActivity extends Activity {
             	TextView error = (TextView) findViewById(R.id.error);
             	
             	EditText edit = (EditText) findViewById(R.id.create_joke_name);
-            	name = edit.getText().toString();
+            	String name = edit.getText().toString();
 
             	edit = (EditText) findViewById(R.id.create_joke_content);
-            	content = edit.getText().toString();
+            	String content = edit.getText().toString();
 
             	edit = (EditText) findViewById(R.id.create_joke_author);
-            	author = edit.getText().valueOf();
+            	int author = Integer.parseInt(edit.getText().toString());
             	
-            	if (name.equals("") || content.equals("") || author.equals("")) {
+            	if (name.equals("") || content.equals("") || author == 0) {
             		error.setText("You need to fill in every field");
             	}
             	else {
@@ -182,9 +182,11 @@ public class MainActivity extends Activity {
                 	View b = findViewById(R.id.createButton);
                 	b.setVisibility(View.VISIBLE);
                 	
-                    db.addJoke(name, content, author);
+                	Joke joke = new Joke(name, content, author);
+                	
+                    db.addJoke(joke);
 
-            		showJoke(name);
+            		showJoke(joke);
             	}
             }
         });
