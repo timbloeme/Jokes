@@ -15,8 +15,6 @@
     
     	<include layout="@layout/top_bar"/>
     	
-    	<include layout="@layout/sign_log_in_bar"/>
-    	
     	<include layout="@layout/search_bar"/>
     
     </ViewFlipper>

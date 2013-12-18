@@ -28,7 +28,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_ID = "id";
     private static final String KEY_TITLE = "title";
     private static final String KEY_CONTENT = "content";
-    private static final String KEY_USER = "user";
+    private static final String KEY_USER = "uid";
  
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -39,7 +39,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String CREATE_JOKES_TABLE = "CREATE TABLE " + TABLE_JOKES + "("
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_TITLE + " TEXT,"
-                + KEY_CONTENT + " TEXT," + KEY_USER + " INTEGER" + ")";
+                + KEY_CONTENT + " TEXT," + KEY_USER + " TEXT" + ")";
         db.execSQL(CREATE_JOKES_TABLE);
     }
  
@@ -58,9 +58,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	SQLiteDatabase db = this.getWritableDatabase();
     	 
         ContentValues values = new ContentValues();
+        Log.v("DB","title: "+joke.getTitle());
+        Log.v("DB","user: "+joke.getUser());
         values.put(KEY_TITLE, joke.getTitle()); // title of the joke
         values.put(KEY_CONTENT, joke.getContent()); // Joke
-        values.put(KEY_USER, joke.getUser()); // author id of joke
+        values.put(KEY_USER, joke.getUser()); // author of joke
      
         // Inserting Row
         db.insert(TABLE_JOKES, null, values);
@@ -172,6 +174,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 Joke joke = new Joke();
+                Log.v("DB","title: "+cursor.getString(1));
                 joke.setID(Integer.parseInt(cursor.getString(0)));
                 joke.setTitle(cursor.getString(1));
                 joke.setContent(cursor.getString(2));
