@@ -3,73 +3,79 @@ package com.example.jokes;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.example.restfulwebservice.R;
-import com.example.restfulwebservice.RestFulWebservice;
-import com.example.restfulwebservice.RestFulWebservice.LongOperation;
-
 import android.os.AsyncTask;
-import android.os.Bundle;
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
- 
-public class Rest extends Activity {
-   
-      
-      
-    // Class with extends AsyncTask class
-     
-    private class get_jokes  extends AsyncTask<String, Void, Void> {
+import android.util.Log;
+
+import com.google.gson.Gson;
+
+class Rest  extends AsyncTask<String, Void, Void> {
           
         // Required initialization
+    	
+
+    	
+    	public static final int GET = 1;
+    	public static final int DELETE = 2;
+    	public static final int CREATE = 3;
+    	public static final int UPDATE = 4;
+    	
+    	public static final int JOKE = 1;
+    	public static final int PROFILE = 2;
+    	public static final int GENRE = 3;
          
         private final HttpClient Client = new DefaultHttpClient();
-        private String Content;
+        private String data;
+        private String returned;
         private String Error = null;
-        private ProgressDialog Dialog = new ProgressDialog(RestFulWebservice.this);
-        String data =""; 
-        TextView uiUpdate = (TextView) findViewById(R.id.output);
-        TextView jsonParsed = (TextView) findViewById(R.id.jsonParsed);
-        int sizeData = 0;  
-        EditText serverText = (EditText) findViewById(R.id.serverText);
+        private URL url;
+        Request request; 
+        int sizeData = 0;
+        Joke jokes[];
+        
+        Gson gson = new Gson();
+        
          
          
-        protected void onPreExecute() {
-            // NOTE: You can call UI Element here.
-              
-            //Start Progress Dialog (Message)
-            
-            Dialog.setMessage("Please wait..");
-            Dialog.show();
-             
+        protected void onPreExecute() {             
         }
   
         // Call after onPreExecute method
         protected Void doInBackground(String... urls) {
-             
-            /************ Make Post Call To Web Server ***********/
             BufferedReader reader=null;
     
                  // Send data 
                 try
                 { 
-                   
-                   // Defined URL  where to send data
-                   URL url = new URL(urls[0]);
+                  // Defined URL  where to send data
+                  request =  gson.fromJson(urls[0], Request.class);
+                  url = new URL(request.url);
+                  switch (request.type){
+                  	case JOKE:
+                  		try{
+	                  		data = "&" + URLEncoder.encode("id", "UTF-8") + "=" + request.ids;
+	                  		if(request.operation == UPDATE || request.operation == CREATE){
+		                  		data += "&" + URLEncoder.encode("joke", "UTF-8") + "=" + gson.toJson(request.joke._content);
+		                  		data += "&" + URLEncoder.encode("title", "UTF-8") + "=" + gson.toJson(request.joke._title);
+		                  		data += "&" + URLEncoder.encode("user", "UTF-8") + "=" + gson.toJson(request.joke._user);
+	                  		}
+                  		}catch(Exception ex){
+                  			Log.v("Data encoding",ex.getMessage());
+                  		}finally{
+                  		}
+                  	case PROFILE:
+                  	case GENRE:
+                  }
+                  
                       
                   // Send POST data request
         
@@ -93,7 +99,7 @@ public class Rest extends Activity {
                         }
                      
                     // Append Server Response To Content String 
-                   Content = sb.toString();
+                    returned = sb.toString();
                 }
                 catch(Exception ex)
                 {
@@ -110,7 +116,6 @@ public class Rest extends Activity {
                     catch(Exception ex) {}
                 }
              
-            /*****************************************************/
             return null;
         }
           
@@ -118,41 +123,30 @@ public class Rest extends Activity {
             // NOTE: You can call UI Element here.
               
             // Close progress dialog
-            Dialog.dismiss();
               
             if (Error != null) {
-                  
-                uiUpdate.setText("Output : "+Error);
                   
             } else {
                
                 // Show Response Json On Screen (activity)
-                uiUpdate.setText( Content );
                  
-             /****************** Start Parse Response JSON Data *************/
                  
                 String OutputData = "";
                 JSONObject jsonResponse;
                        
                 try {
                        
-                     /****** Creates a new JSONObject with name/value mappings from the JSON string. ********/
-                     jsonResponse = new JSONObject(Content);
+                     jsonResponse = new JSONObject(returned);
                        
-                     /***** Returns the value mapped by name if it exists and is a JSONArray. ***/
-                     /*******  Returns null otherwise.  *******/
                      JSONArray jsonMainNode = jsonResponse.optJSONArray("Android");
                        
-                     /*********** Process each JSON Node ************/
    
                      int lengthJsonArr = jsonMainNode.length();  
    
                      for(int i=0; i < lengthJsonArr; i++) 
                      {
-                         /****** Get Object for each JSON node.***********/
                          JSONObject jsonChildNode = jsonMainNode.getJSONObject(i);
                            
-                         /******* Fetch node values **********/
                          String title       = jsonChildNode.optString("title").toString();
                          String joke     = jsonChildNode.optString("joke").toString();
                          String uid = jsonChildNode.optString("uid").toString();
@@ -161,11 +155,9 @@ public class Rest extends Activity {
                          OutputData += " title           : "+ title +"\n"+ "joke      : "+ joke +"\n"+ "uid                : "+ uid +"\n"  +"--------------------------------------------------\n";
                          
                           
-                    }
-                 /****************** End Parse Response JSON Data *************/    
+                    } 
                       
                      //Show Parsed Output on screen (activity)
-                     jsonParsed.setText( OutputData );
                       
                        
                  } catch (JSONException e) {
@@ -179,6 +171,3 @@ public class Rest extends Activity {
           
     }
      
-}
-	
-}
