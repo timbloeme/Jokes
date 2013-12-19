@@ -1,4 +1,4 @@
-package com.example.jokes;
+package com.example.restfulwebservice;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -12,11 +12,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.example.restfulwebservice.R;
-import com.example.restfulwebservice.RestFulWebservice;
-import com.example.restfulwebservice.RestFulWebservice.LongOperation;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
@@ -27,13 +22,37 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
  
-public class Rest extends Activity {
-   
+public class RestFulWebservice extends Activity {
+ 
+     
+    /** Called when the activity is first created. */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+      
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_rest_ful_webservice);  
+         
+        final Button GetServerData = (Button) findViewById(R.id.GetServerData);
+          
+        GetServerData.setOnClickListener(new OnClickListener() {
+             
+            @Override
+            public void onClick(View arg0) {
+                 
+                // WebServer Request URL
+                String serverURL = "http://www.timbloeme.nl/app/getjokes.php";
+                 
+                // Use AsyncTask execute Method To Prevent ANR Problem
+                new LongOperation().execute(serverURL);
+            }
+        });    
+          
+    }
       
       
     // Class with extends AsyncTask class
      
-    private class get_jokes  extends AsyncTask<String, Void, Void> {
+    private class LongOperation  extends AsyncTask<String, Void, Void> {
           
         // Required initialization
          
@@ -55,6 +74,15 @@ public class Rest extends Activity {
             
             Dialog.setMessage("Please wait..");
             Dialog.show();
+             
+            /*try{
+                // Set Request parameter
+                data +="&" + URLEncoder.encode("id", "UTF-8") + "=0";
+                     
+            } catch (UnsupportedEncodingException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } */
              
         }
   
@@ -179,6 +207,4 @@ public class Rest extends Activity {
           
     }
      
-}
-	
 }
