@@ -4,6 +4,7 @@ import android.util.Log;
 
 public class Joke {
     int _id;
+    int _uid;
     String _title;
     String _content;
     String _user;
@@ -15,6 +16,14 @@ public class Joke {
     // constructor
     public Joke(int _id, String _title, String _content, String _user){
         this._id = _id;
+        this._title = _title;
+        this._content = _content;
+        this._user = _user;
+    }
+    // constructor
+    public Joke(int _id, int _uid, String _title, String _content, String _user){
+        this._id = _id;
+        this._uid = _uid;  
         this._title = _title;
         this._content = _content;
         this._user = _user;

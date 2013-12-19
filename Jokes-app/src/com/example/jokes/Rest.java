@@ -18,12 +18,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
-class Rest  extends AsyncTask<String, Void, Void> {
-          
-        // Required initialization
-    	
-
-    	
+class Rest  extends AsyncTask<String, Void, Void> {    	
     	public static final int GET = 1;
     	public static final int DELETE = 2;
     	public static final int CREATE = 3;
@@ -40,7 +35,7 @@ class Rest  extends AsyncTask<String, Void, Void> {
         private URL url;
         Request request; 
         int sizeData = 0;
-        Joke jokes[];
+        public Joke jokes[];
         
         Gson gson = new Gson();
         
@@ -59,23 +54,31 @@ class Rest  extends AsyncTask<String, Void, Void> {
                   // Defined URL  where to send data
                   request =  gson.fromJson(urls[0], Request.class);
                   url = new URL(request.url);
-                  switch (request.type){
-                  	case JOKE:
-                  		try{
-	                  		data = "&" + URLEncoder.encode("id", "UTF-8") + "=" + request.ids;
-	                  		if(request.operation == UPDATE || request.operation == CREATE){
-		                  		data += "&" + URLEncoder.encode("joke", "UTF-8") + "=" + gson.toJson(request.joke._content);
-		                  		data += "&" + URLEncoder.encode("title", "UTF-8") + "=" + gson.toJson(request.joke._title);
-		                  		data += "&" + URLEncoder.encode("user", "UTF-8") + "=" + gson.toJson(request.joke._user);
+                  try{
+	                  switch (request.type){
+	                  	case JOKE:
+	                  		switch(request.operation){
+	                  			case GET: 
+	                  				data = "&" + URLEncoder.encode("id", "UTF-8") + "=" + request.ids;
+	                  			case DELETE:
+	                  				data = "&" + URLEncoder.encode("id", "UTF-8") + "=" + request.ids;
+	                  			case CREATE:
+			                  		data = "&" + URLEncoder.encode("joke", "UTF-8") + "=" + gson.toJson(request.joke._content);
+			                  		data += "&" + URLEncoder.encode("title", "UTF-8") + "=" + gson.toJson(request.joke._title);
+			                  		data += "&" + URLEncoder.encode("user", "UTF-8") + "=" + gson.toJson(request.joke._user);
+	                  			case UPDATE:
+	                  				data = "&" + URLEncoder.encode("id", "UTF-8") + "=" + request.ids;
+			                  		data += "&" + URLEncoder.encode("joke", "UTF-8") + "=" + gson.toJson(request.joke._content);
+			                  		data += "&" + URLEncoder.encode("title", "UTF-8") + "=" + gson.toJson(request.joke._title);
+			                  		data += "&" + URLEncoder.encode("user", "UTF-8") + "=" + gson.toJson(request.joke._user);
+	                  				
 	                  		}
-                  		}catch(Exception ex){
-                  			Log.v("Data encoding",ex.getMessage());
-                  		}finally{
-                  		}
-                  	case PROFILE:
-                  	case GENRE:
-                  }
-                  
+	                  	case PROFILE:
+	                  	case GENRE:
+	                  }
+            	}catch(Exception ex){
+            		Log.v("Restfull error",ex.getMessage());
+            	}
                       
                   // Send POST data request
         
@@ -101,19 +104,15 @@ class Rest  extends AsyncTask<String, Void, Void> {
                     // Append Server Response To Content String 
                     returned = sb.toString();
                 }
-                catch(Exception ex)
-                {
-                    Error = ex.getMessage();
+                catch(Exception ex){
+                    Log.v("Restfull error",ex.getMessage());
                 }
-                finally
-                {
-                    try
-                    {
-          
+                finally{
+                    try {
                         reader.close();
+                    }catch(Exception ex) {
+                        Log.v("Restfull error",ex.getMessage());
                     }
-        
-                    catch(Exception ex) {}
                 }
              
             return null;
@@ -127,11 +126,6 @@ class Rest  extends AsyncTask<String, Void, Void> {
             if (Error != null) {
                   
             } else {
-               
-                // Show Response Json On Screen (activity)
-                 
-                 
-                String OutputData = "";
                 JSONObject jsonResponse;
                        
                 try {
@@ -141,31 +135,24 @@ class Rest  extends AsyncTask<String, Void, Void> {
                      JSONArray jsonMainNode = jsonResponse.optJSONArray("Android");
                        
    
-                     int lengthJsonArr = jsonMainNode.length();  
-   
-                     for(int i=0; i < lengthJsonArr; i++) 
-                     {
+                     int lengthJsonArr = jsonMainNode.length();
+                     switch(request.type){
+                     case GET: jokes=new Joke[jsonMainNode.length()];
+                     }
+                     for(int i=0; i < lengthJsonArr; i++){
                          JSONObject jsonChildNode = jsonMainNode.getJSONObject(i);
-                           
-                         String title       = jsonChildNode.optString("title").toString();
-                         String joke     = jsonChildNode.optString("joke").toString();
-                         String uid = jsonChildNode.optString("uid").toString();
-                           
-                         
-                         OutputData += " title           : "+ title +"\n"+ "joke      : "+ joke +"\n"+ "uid                : "+ uid +"\n"  +"--------------------------------------------------\n";
-                         
-                          
+                         switch(request.type){
+                         	case GET: String title       = jsonChildNode.optString("title").toString();
+                                	  String joke     = jsonChildNode.optString("joke").toString();
+                                	  String uid = jsonChildNode.optString("uid").toString();
+                                	  String id  = jsonChildNode.optString("id").toString();
+                                	  String user = jsonChildNode.optString("user").toString();
+                                	  jokes[i] = new Joke(Integer.parseInt(id), Integer.parseInt(uid), title, joke, user);
+                         }
                     } 
-                      
-                     //Show Parsed Output on screen (activity)
-                      
-                       
-                 } catch (JSONException e) {
-           
-                     e.printStackTrace();
+                 } catch (JSONException ex) {
+                     Log.v("Restfull error", ex.getMessage());
                  }
-   
-                  
              }
         }
           

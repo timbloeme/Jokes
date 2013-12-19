@@ -13,11 +13,16 @@
     if($ids[0]=="0"){
         $result = mysqli_query($con,"SELECT * FROM jokes ORDER BY id DESC LIMIT 10");
         while($row = mysqli_fetch_array($result)){
+            $result_name = mysqli_query($con,"SELECT name FROM users WHERE id=" . $row[1]);
+            $row_name = mysqli_fetch_array($result_name);
             $jsonTempData = array();
             $jsonTempData['id']    = $row[0];
             $jsonTempData['uid']   = $row[1];
             $jsonTempData['title'] = $row[2];
             $jsonTempData['joke']  = $row[3];
+            $jsonTempData['user']  = $row_name[0];
+            
+            
             $jsonData[] = $jsonTempData; 
         }
     }else{
