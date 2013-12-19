@@ -24,7 +24,7 @@ public class FavoritesFragment extends Fragment {
     	
         rootView = inflater.inflate(R.layout.joke_list, container, false);
 
-    	JokesManager jm = new JokesManager(rootView, this.getActivity());
+    	JokesManager jm = new JokesManager(rootView);
 
         List<Joke> jokes = new ArrayList<Joke>();
         jokes.add(new Joke("#1","Joke#1","Simone"));

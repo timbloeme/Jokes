@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -14,10 +15,11 @@ import android.widget.ViewFlipper;
 public class JokesManager extends Activity{
 	View rootView;
 	Activity ac;
+	public static final int JOKE	   = 1;
 	
-	JokesManager (View rootView, Activity ac){
+	JokesManager (View rootView){
 		this.rootView = rootView;
-		this.ac = ac;
+		this.ac = (Activity) rootView.getContext();
 	}
 	
     public void setJokes(List<Joke> jokes){
@@ -40,8 +42,9 @@ public class JokesManager extends Activity{
     }
     
     public void showJoke(String joke){
-    	ViewFlipper vf = (ViewFlipper) rootView.findViewById(R.id.bottomFlipper);
+    	ViewFlipper vf = (ViewFlipper) rootView.findViewById(R.id.jokesFlipper);
     	vf.setDisplayedChild(1);
+    	Log.v("TEST",joke);
         TextView tv = (TextView) rootView.findViewById(R.id.joke_name);
         tv.setText(joke);
         tv = (TextView) rootView.findViewById(R.id.joke_content);

@@ -32,7 +32,10 @@
             android:name="com.example.jokes.FavoritesFragment">
         </fragment>
         <fragment
-            android:name="com.example.jokes.HomeActivity">
+            android:name="com.example.jokes.HomeFragment">
+        </fragment>
+        <fragment
+            android:name="com.example.jokes.JokeFragment">
         </fragment>
     </application>
 

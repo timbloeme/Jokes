@@ -1,6 +1,5 @@
 package com.example.jokes;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -13,11 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
@@ -40,6 +35,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     private String[] tabs = {"Main", "Favorites", "Profile"};
     
     public DatabaseHandler db = new DatabaseHandler(this);
+    private JokesManager jm;
 	
 	//public Rest rest = new Rest();
 
@@ -97,6 +93,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             public void onPageScrollStateChanged(int arg0) {
             }
         });
+        
+        jm = new JokesManager(getWindow().getDecorView());
     }
 
     @Override
@@ -108,17 +106,12 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         // on tab selected
         // show respected fragment view
         viewPager.setCurrentItem(tab.getPosition());
-        /*if(tab.getPosition() == HOME){
-        	List<Joke> jokes = db.getAllJokes();
-            setJokes(jokes);
-        } else if(tab.getPosition() == FAVORITES){
-        	// if logged in
-        	// db.getFavoriteJokes
-        	List<Joke> jokes = db.getAllJokes();
-            setJokes(jokes);
-            TextView tv = (TextView) findViewById(R.id.jokes_list_title);
-            tv.setText("Your favorite jokes");
-        }*/
+        ViewFlipper vf = (ViewFlipper) findViewById(R.id.jokesFlipper);
+        if(vf != null && vf.getDisplayedChild() == 1) {
+        	vf.setDisplayedChild(0);
+        	List<Joke> jokes = db.getRecentJokes();
+        	jm.setJokes(jokes);
+        }
     }
  
     @Override
@@ -127,34 +120,18 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         int itemId = item.getItemId();
-        ViewFlipper tf;
         
         switch (itemId) {
-        
-        case android.R.id.home:
-        	ViewFlipper vf = (ViewFlipper) findViewById(R.id.bottomFlipper);
-        	vf.setDisplayedChild(HOME);
-        	tf = (ViewFlipper) findViewById(R.id.topFlipper);
-        	tf.setDisplayedChild(NORMAL_BAR);
-        	TextView tv = (TextView) findViewById(R.id.jokes_list_title);
-        	tv.setText("Most recent jokes:");
-        	
-        	List<Joke> jokes = db.getAllJokes();
-            setJokes(jokes);
-            
-            break;
             
         case R.id.action_random:
             int max = db.getJokesCount() - 1;
             // get random joke with id between 0 - max
             Random r = new Random();
             int rnd = r.nextInt(max);
-            showJoke(db.getJoke(rnd));
+            jm.showJoke(db.getJoke(rnd).getTitle());
         	break;
         
         case R.id.action_search:
-        	tf = (ViewFlipper) findViewById(R.id.topFlipper);
-        	tf.setDisplayedChild(SEARCH_BAR);
         	break;
         }
 
@@ -169,40 +146,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         return true;
     }
     
-    public void setJokes(List<Joke> jokes){
-        final ArrayList<String> list = new ArrayList<String>();
-        for (Joke joke : jokes) {
-    		list.add(joke.getTitle());
-    	}
-        ListView listView = (ListView) findViewById(R.id.jokes_list);
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list);
-        listView.setAdapter(adapter);
-        
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
-                //pak het Joke element en geef deze mee aan showJoke
-              	final String item = (String) parent.getItemAtPosition(position);
-              	Joke joke = db.getJoke(item);
-                showJoke(joke);
-            }
-        });
-    }
-    
-    public void showJoke(Joke joke){
-    	ViewFlipper vf = (ViewFlipper) findViewById(R.id.bottomFlipper);
-    	vf.setDisplayedChild(JOKE);
-        TextView tv = (TextView) findViewById(R.id.joke_name);
-        tv.setText(joke.getTitle());
-        tv = (TextView) findViewById(R.id.joke_content);
-        tv.setText(joke.getContent());
-        tv = (TextView) findViewById(R.id.joke_author);
-        tv.setText(joke.getUser());
-    }
-    
     public void showSearchedJokes(View view) {
-    	ViewFlipper vf = (ViewFlipper) findViewById(R.id.bottomFlipper);
-    	vf.setDisplayedChild(JOKES_LIST);
     	TextView tv = (TextView) findViewById(R.id.jokes_list_title);
     	tv.setText("Found jokes:");
 
@@ -211,11 +155,11 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     	
     	// find jokes with search in the name / author name
     	List<Joke> jokes = db.searchJokes(search);
-    	setJokes(jokes);
+    	jm.setJokes(jokes);
     }
     
     public void createJoke(View view) {
-    	ViewFlipper vf = (ViewFlipper) findViewById(R.id.bottomFlipper);
+    	/*ViewFlipper vf = (ViewFlipper) findViewById(R.id.bottomFlipper);
     	vf.setDisplayedChild(CREATE_JOKE);
     	
     	View b = findViewById(R.id.createButton);
@@ -250,6 +194,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             		showJoke(joke);
             	}
             }
-        });
+        });*/
     }
 }

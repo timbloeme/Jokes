@@ -14,41 +14,20 @@
     	android:layout_height="match_parent">
 	</android.support.v4.view.ViewPager>
 
-    <ViewFlipper
-        android:id="@+id/topFlipper"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/pager">
-    
-    	<include layout="@layout/top_bar"/>
-    	
-    	<include layout="@layout/search_bar"/>
-    	
-    </ViewFlipper>
-
-	<ViewFlipper
-	    android:id="@+id/bottomFlipper"
-	    android:layout_width="match_parent"
+	<LinearLayout
+	    android:orientation="horizontal"
+	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
-	    android:paddingBottom="50dp"
-	    android:layout_below="@id/topFlipper">
+		android:layout_alignParentBottom="true">
 	    
-	    <include layout="@layout/joke_list"/>
-	    
-	    <include layout="@layout/joke"/>
-	    
-	    <include layout="@layout/profile"/>
-	    
-	    <include layout="@layout/create_joke"/>
-	    
-	</ViewFlipper>
-
-	<Button 
-	    android:id="@+id/createButton"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-		android:layout_alignParentBottom="true"
-	    android:text="@string/create_joke_button"
-	    android:onClick="createJoke"/>
+		<Button 
+	    	android:id="@+id/createButton"
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	android:text="@string/create_joke_button"
+	    	android:onClick="createJoke"/>
+	
+		<include layout="@layout/search_bar"/>
+	</LinearLayout>
 
 </RelativeLayout>
