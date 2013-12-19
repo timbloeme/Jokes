@@ -4,8 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import android.app.Activity;
+import android.app.ActionBar;
+import android.app.ActionBar.Tab;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,20 +21,24 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
 
-
-	// favorites and home are nothing more than a special jokes_list
-	public static final int FAVORITES  = 0;
 	public static final int HOME       = 0;
 	public static final int JOKES_LIST = 0;
+	public static final int FAVORITES  = 1;
 	public static final int JOKE	   = 1;
-	public static final int PROFILE    = 2;
+	public static final int PROFILE	   = 2;
 	public static final int CREATE_JOKE= 3;
 
 	public static final int NORMAL_BAR = 0;
 	public static final int SEARCH_BAR = 1;
 
+    private ViewPager viewPager;
+    private TabsPagerAdapter mAdapter;
+    private ActionBar actionBar;
+    // Tab titles
+    private String[] tabs = {"Main", "Favorites", "Profile"};
+    
     public DatabaseHandler db = new DatabaseHandler(this);
 	
 	//public Rest rest = new Rest();
@@ -53,10 +61,68 @@ public class MainActivity extends Activity {
         db.addJoke(new Joke("#2","Joking2","Simone"));
         db.addJoke(new Joke("#3","Joking3","Tim"));
         db.addJoke(new Joke("#4","Joking4","Debbie"));
+        
+        // Initilization
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        actionBar = getActionBar();
+        mAdapter = new TabsPagerAdapter(getSupportFragmentManager());
+ 
+        viewPager.setAdapter(mAdapter);
+        actionBar.setHomeButtonEnabled(false);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);        
+ 
+        // Adding Tabs
+        for (String tab_name : tabs) {
+            actionBar.addTab(actionBar.newTab().setText(tab_name)
+                    .setTabListener(this));
+        }
+        
+        /**
+         * on swiping the viewpager make respective tab selected
+         * */
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+         
+            @Override
+            public void onPageSelected(int position) {
+                // on changing the page
+                // make respected tab selected
+                actionBar.setSelectedNavigationItem(position);
+            }
+         
+            @Override
+            public void onPageScrolled(int arg0, float arg1, int arg2) {
+            }
+         
+            @Override
+            public void onPageScrollStateChanged(int arg0) {
+            }
+        });
+    }
 
-        List<Joke> jokes = db.getAllJokes();
-
-        setJokes(jokes);
+    @Override
+    public void onTabReselected(Tab tab, FragmentTransaction ft) {
+    }
+ 
+    @Override
+    public void onTabSelected(Tab tab, FragmentTransaction ft) {
+        // on tab selected
+        // show respected fragment view
+        viewPager.setCurrentItem(tab.getPosition());
+        /*if(tab.getPosition() == HOME){
+        	List<Joke> jokes = db.getAllJokes();
+            setJokes(jokes);
+        } else if(tab.getPosition() == FAVORITES){
+        	// if logged in
+        	// db.getFavoriteJokes
+        	List<Joke> jokes = db.getAllJokes();
+            setJokes(jokes);
+            TextView tv = (TextView) findViewById(R.id.jokes_list_title);
+            tv.setText("Your favorite jokes");
+        }*/
+    }
+ 
+    @Override
+    public void onTabUnselected(Tab tab, FragmentTransaction ft) {
     }
     
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
@@ -146,22 +212,6 @@ public class MainActivity extends Activity {
     	// find jokes with search in the name / author name
     	List<Joke> jokes = db.searchJokes(search);
     	setJokes(jokes);
-    }
-    
-    public void showProfile(View view) {
-    	ViewFlipper vf = (ViewFlipper) findViewById(R.id.bottomFlipper);
-    	vf.setDisplayedChild(PROFILE);
-    	
-    	// get profile and show
-    }
-    
-    public void showFavorites(View view) {
-    	ViewFlipper vf = (ViewFlipper) findViewById(R.id.bottomFlipper);
-    	vf.setDisplayedChild(FAVORITES);
-    	TextView tv = (TextView) findViewById(R.id.jokes_list_title);
-    	tv.setText("Your favorite jokes:");
-    	
-    	// set jokes list
     }
     
     public void createJoke(View view) {

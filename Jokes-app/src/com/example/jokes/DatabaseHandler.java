@@ -115,7 +115,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public List<Joke> searchJokes(String search) {
         List<Joke> jokeList = new ArrayList<Joke>();
         // Query for the jokes with title that is like the search
-        String selectQuery = "SELECT  * FROM " + TABLE_JOKES + " WHERE title LIKE '%" + search + "%' OR user LIKE '%" + search + "%'";
+        String selectQuery = "SELECT  * FROM " + TABLE_JOKES + " WHERE title LIKE '%" + search + "%' OR uid LIKE '%" + search + "%'";
      
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
