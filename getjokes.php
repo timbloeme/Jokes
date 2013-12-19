@@ -14,6 +14,7 @@
         $result = mysqli_query($con,"SELECT * FROM jokes ORDER BY id DESC LIMIT 10");
         while($row = mysqli_fetch_array($result)){
             $jsonTempData = array();
+            $jsonTempData['id']    = $row[0];
             $jsonTempData['uid']   = $row[1];
             $jsonTempData['title'] = $row[2];
             $jsonTempData['joke']  = $row[3];
@@ -24,6 +25,7 @@
             $result = mysqli_query($con,"SELECT * FROM jokes WHERE id =" . $ids[0]);
             $row = mysqli_fetch_array($result);
             $jsonTempData = array();
+            $jsonTempData['id']    = $row[0];
             $jsonTempData['uid']   = $row[1];
             $jsonTempData['title'] = $row[2];
             $jsonTempData['joke']  = $row[3];
