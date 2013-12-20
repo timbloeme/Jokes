@@ -5,6 +5,6 @@
     $title = urldecode($_POST['title']);
     $joke = urldecode($_POST['joke']);
     
-    $result = mysqli_query($con,"INSERT INTO jokes (uid, name, joke) VALUES (1,'test','test joke')";
-    mysqli_close($con);
+    $result = mysqli_query($con,"INSERT INTO jokes (uid, name, joke) VALUES (" . $uid . ",'" . $title . "','" . $joke . "')";
+    mysqli_close($con)
 ?>
