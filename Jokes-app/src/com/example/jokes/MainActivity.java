@@ -37,9 +37,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
 	public static final int NORMAL_BAR = 0;
 	public static final int SEARCH_BAR = 1;
-    public DatabaseHandler db = new DatabaseHandler(this);
     
     Gson gson;
+    Rest rest;
+    Request req;
     private ViewPager viewPager;
     private TabsPagerAdapter mAdapter;
     private ActionBar actionBar;
@@ -84,8 +85,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         }catch(Exception ex){
         }
         List<Joke> jokes = rest.jokes;
-
-        setJokes(jokes);
         
         // Initilization
         viewPager = (ViewPager) findViewById(R.id.pager);
@@ -137,8 +136,16 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         viewPager.setCurrentItem(tab.getPosition());
         ViewFlipper vf = (ViewFlipper) findViewById(R.id.viewFlipper);
         if(vf != null && vf.getDisplayedChild() == 1) {
+        	rest = new Rest();
         	vf.setDisplayedChild(0);
-        	List<Joke> jokes = db.getRecentJokes();
+    		req = new Request(JOKE, GET, "http://www.timbloeme.nl/app/getjokes.php");
+	        String params = gson.toJson(req);
+	        rest.execute(params);
+	        try{
+	        	rest.get();
+	        }catch(Exception ex){
+	        }
+	        List<Joke> jokes = rest.jokes;
         	jm.setJokes(jokes);
         }
     }
@@ -194,13 +201,24 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     		List<Joke> jokes = db.getAllJokes();
     		return jokes;
     	} else if(type.equals("Recent")){
-    		List<Joke> jokes = db.getRecentJokes();
+    		rest = new Rest();
+    		req = new Request(JOKE, GET, "http://www.timbloeme.nl/app/getjokes.php");
+	        String params = gson.toJson(req);
+	        rest.execute(params);
+	        try{
+	        	rest.get();
+	        }catch(Exception ex){
+	        }
+	        List<Joke> jokes = rest.jokes;
     		return jokes;
     	}
     	return error;
     }
     
     public void addJokeToDatabase(Joke joke){
-    	db.addJoke(joke);
+    	rest = new Rest();
+		req = new Request(JOKE, CREATE, "http://www.timbloeme.nl/app/getjokes.php",joke);
+        String params = gson.toJson(req);
+        rest.execute(params);
     }
 }
