@@ -32,9 +32,9 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     private TabsPagerAdapter mAdapter;
     private ActionBar actionBar;
     // Tab titles
-    private String[] tabs = {"Main", "Favorites", "Profile"};
+    private String[] tabs = {"Main", "Favorites", "Profile", "Create Joke"};
     
-    public DatabaseHandler db = new DatabaseHandler(this);
+    private DatabaseHandler db = new DatabaseHandler(this);
     private JokesManager jm;
 	
 	//public Rest rest = new Rest();
@@ -132,6 +132,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         	break;
         
         case R.id.action_search:
+            findViewById(R.id.search_bar).setVisibility(View.VISIBLE);
         	break;
         }
 
@@ -156,44 +157,5 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     	// find jokes with search in the name / author name
     	List<Joke> jokes = db.searchJokes(search);
     	jm.setJokes(jokes);
-    }
-    
-    public void createJoke(View view) {
-    	/*ViewFlipper vf = (ViewFlipper) findViewById(R.id.bottomFlipper);
-    	vf.setDisplayedChild(CREATE_JOKE);
-    	
-    	View b = findViewById(R.id.createButton);
-    	b.setVisibility(View.GONE);
-    	
-    	final Button button = (Button) findViewById(R.id.createJokeButton);
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-            	TextView error = (TextView) findViewById(R.id.error);
-            	
-            	EditText edit = (EditText) findViewById(R.id.create_joke_name);
-            	String name = edit.getText().toString();
-
-            	edit = (EditText) findViewById(R.id.create_joke_content);
-            	String content = edit.getText().toString();
-
-            	edit = (EditText) findViewById(R.id.create_joke_author);
-            	String author = edit.getText().toString();
-            	
-            	if (name.equals("") || content.equals("") || author.equals("")) {
-            		error.setText("You need to fill in every field");
-            	}
-            	else {
-                	
-                	View b = findViewById(R.id.createButton);
-                	b.setVisibility(View.VISIBLE);
-                	
-                	Joke joke = new Joke(name, content, author);
-                	
-                    db.addJoke(joke);
-
-            		showJoke(joke);
-            	}
-            }
-        });*/
     }
 }

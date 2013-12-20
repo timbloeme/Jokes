@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
@@ -15,11 +17,13 @@ import android.widget.ViewFlipper;
 public class JokesManager extends Activity{
 	View rootView;
 	Activity ac;
+    private DatabaseHandler db;
 	public static final int JOKE	   = 1;
 	
 	JokesManager (View rootView){
 		this.rootView = rootView;
 		this.ac = (Activity) rootView.getContext();
+		this.db = new DatabaseHandler(this);
 	}
 	
     public void setJokes(List<Joke> jokes){
@@ -51,5 +55,35 @@ public class JokesManager extends Activity{
         tv.setText(joke);
         tv = (TextView) rootView.findViewById(R.id.joke_author);
         tv.setText(joke);
+    }
+    
+    public void createJoke() {    	    	
+    	final Button button = (Button) rootView.findViewById(R.id.create_joke_button);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+            	TextView error = (TextView) rootView.findViewById(R.id.error);
+            	
+            	EditText edit = (EditText) rootView.findViewById(R.id.create_joke_name);
+            	String name = edit.getText().toString();
+
+            	edit = (EditText) rootView.findViewById(R.id.create_joke_content);
+            	String content = edit.getText().toString();
+
+            	edit = (EditText) rootView.findViewById(R.id.create_joke_author);
+            	String author = edit.getText().toString();
+            	
+            	if (name.equals("") || content.equals("") || author.equals("")) {
+            		error.setText("You need to fill in every field");
+            	}
+            	else {
+                	
+                	Joke joke = new Joke(name, content, author);
+                	
+                    db.addJoke(joke);
+
+            		showJoke(joke.getTitle());
+            	}
+            }
+        });
     }
 }

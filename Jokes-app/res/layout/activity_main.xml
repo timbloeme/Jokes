@@ -13,21 +13,12 @@
     	android:layout_width="match_parent"
     	android:layout_height="match_parent">
 	</android.support.v4.view.ViewPager>
-
-	<LinearLayout
-	    android:orientation="horizontal"
+	
+	<include layout="@layout/search_bar"
+	    android:id="@+id/search_bar"
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
-		android:layout_alignParentBottom="true">
-	    
-		<Button 
-	    	android:id="@+id/createButton"
-	    	android:layout_width="wrap_content"
-	    	android:layout_height="wrap_content"
-	    	android:text="@string/create_joke_button"
-	    	android:onClick="createJoke"/>
-	
-		<include layout="@layout/search_bar"/>
-	</LinearLayout>
+		android:visibility="gone"
+		android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>
