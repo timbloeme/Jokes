@@ -3,9 +3,12 @@ package com.example.jokes;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,28 +20,44 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
-public class MainActivity extends Activity {
+import com.google.gson.Gson;
+
+public class MainActivity extends Activity {    	
+	public static final int GET = 1;
+	public static final int DELETE = 2;
+	public static final int CREATE = 3;
+	public static final int UPDATE = 4;
+	
+	public static final int JOKE = 1;
+	public static final int PROFILE = 2;
+	public static final int GENRE = 3;
 
 
 	// favorites and home are nothing more than a special jokes_list
 	public static final int FAVORITES  = 0;
 	public static final int HOME       = 0;
 	public static final int JOKES_LIST = 0;
-	public static final int JOKE	   = 1;
-	public static final int PROFILE    = 2;
 	public static final int CREATE_JOKE= 3;
 
 	public static final int NORMAL_BAR = 0;
 	public static final int SEARCH_BAR = 1;
 
     public DatabaseHandler db = new DatabaseHandler(this);
+    
+    Gson gson;
+    
 	
 	//public Rest rest = new Rest();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.v("Main","got created");
+        gson = new Gson();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Request req;
+        Rest rest = new Rest();
+        Log.v("Main","got jokes");
         
         // empty the db for testing purposes
         List<Joke> temp = db.getAllJokes();
@@ -53,8 +72,17 @@ public class MainActivity extends Activity {
         db.addJoke(new Joke("#2","Joking2","Simone"));
         db.addJoke(new Joke("#3","Joking3","Tim"));
         db.addJoke(new Joke("#4","Joking4","Debbie"));
-
-        List<Joke> jokes = db.getAllJokes();
+        
+        int array[] = {2,3};
+        
+        req = new Request(JOKE, GET, "http://www.timbloeme.nl/app/getjokes.php",array);
+        String params = gson.toJson(req);
+        rest.execute(params);
+        try{
+        	rest.get();
+        }catch(Exception ex){
+        }
+        List<Joke> jokes = rest.jokes;
 
         setJokes(jokes);
     }

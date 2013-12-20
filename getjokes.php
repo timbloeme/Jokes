@@ -4,6 +4,8 @@
         $id = urldecode($_POST['id']);
     else
         $id = "0";
+    $clean = array("[","]");
+    $id = str_replace($clean,"",$id);
     $ids = explode(",",$id);
     $nr_ids = count($ids);
     
