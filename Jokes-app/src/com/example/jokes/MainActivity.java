@@ -164,7 +164,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             // get random joke with id between 0 - max
             Random r = new Random();
             int rnd = r.nextInt(max);
-            jm.showJoke(db.getJoke(rnd).getTitle());
+            jm.showJoke(db.getJoke(rnd));
         	break;
         
         case R.id.action_search:
@@ -216,8 +216,9 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     }
     
     public void addJokeToDatabase(Joke joke){
+    	joke.setUID(1);
     	rest = new Rest();
-		req = new Request(JOKE, CREATE, "http://www.timbloeme.nl/app/getjokes.php",joke);
+		req = new Request(JOKE, CREATE, "http://www.timbloeme.nl/app/createjoke.php",joke);
         String params = gson.toJson(req);
         rest.execute(params);
     }

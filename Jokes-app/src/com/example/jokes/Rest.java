@@ -59,6 +59,7 @@ class Rest  extends AsyncTask<String, Void, Void> {
         request =  gson.fromJson(urls[0], Request.class);
         url = new URL(request.url);
         Log.v("Restfull error", Arrays.toString(request.ids));
+        
         try{
             switch (request.type){
                 case JOKE:
@@ -72,13 +73,13 @@ class Rest  extends AsyncTask<String, Void, Void> {
                         case CREATE:
                             data  = URLEncoder.encode("joke", "UTF-8") + "=" + request.joke._content;
                             data += "&" + URLEncoder.encode("title", "UTF-8") + "=" + request.joke._title;
-                            data += "&" + URLEncoder.encode("user", "UTF-8") + "=" + request.joke._user;
+                            data += "&" + URLEncoder.encode("uid", "UTF-8") + "=" + request.joke._uid;
                             break;
                         case UPDATE:
                             data  = URLEncoder.encode("id", "UTF-8") + "=" + request.ids;
                             data += "&" + URLEncoder.encode("joke", "UTF-8") + "=" + request.joke._content;
                             data += "&" + URLEncoder.encode("title", "UTF-8") + "=" + request.joke._title;
-                            data += "&" + URLEncoder.encode("user", "UTF-8") + "=" + request.joke._user;
+                            data += "&" + URLEncoder.encode("uid", "UTF-8") + "=" + request.joke._uid;
                             break;
                             
                     }
@@ -113,30 +114,31 @@ class Rest  extends AsyncTask<String, Void, Void> {
             // Append Server Response To Content String 
             returned = sb.toString();
             JSONObject jsonResponse;
-            
-            try {
-                
-                jsonResponse = new JSONObject(returned);
-                
-                JSONArray jsonMainNode = jsonResponse.optJSONArray("Android");
-                
-    
-                int lengthJsonArr = jsonMainNode.length();
-                for(int i=0; i < lengthJsonArr; i++){
-                    JSONObject jsonChildNode = jsonMainNode.getJSONObject(i);
-                    switch(request.type){
-                        case GET: String title       = jsonChildNode.optString("title").toString();
-                            String joke     = jsonChildNode.optString("joke").toString();
-                            String uid = jsonChildNode.optString("uid").toString();
-                            String id  = jsonChildNode.optString("id").toString();
-                            String user = jsonChildNode.optString("user").toString();
-                            jokes.add(new Joke(Integer.parseInt(id), Integer.parseInt(uid), title, joke, user));
-                            break;
-                    }
-                } 
-            } catch (JSONException ex) {
-                Log.v("Restfull error", ex.getMessage());
-            }finally{
+            if(request.operation == GET){
+	            try {
+	                
+	                jsonResponse = new JSONObject(returned);
+	                
+	                JSONArray jsonMainNode = jsonResponse.optJSONArray("Android");
+	                
+	    
+	                int lengthJsonArr = jsonMainNode.length();
+	                for(int i=0; i < lengthJsonArr; i++){
+	                    JSONObject jsonChildNode = jsonMainNode.getJSONObject(i);
+	                    switch(request.type){
+	                        case GET: String title       = jsonChildNode.optString("title").toString();
+	                            String joke     = jsonChildNode.optString("joke").toString();
+	                            String uid = jsonChildNode.optString("uid").toString();
+	                            String id  = jsonChildNode.optString("id").toString();
+	                            String user = jsonChildNode.optString("user").toString();
+	                            jokes.add(new Joke(Integer.parseInt(id), Integer.parseInt(uid), title, joke, user));
+	                            break;
+	                    }
+	                } 
+	            } catch (JSONException ex) {
+	                Log.v("Restfull error", ex.getMessage());
+	            }finally{
+	            }
             }
         }
         catch(Exception ex){

@@ -45,6 +45,16 @@ public class Joke {
     public void setID(int id){
         this._id = id;
     }
+    
+    // getting ID
+    public int getUID(){
+        return this._uid;
+    }
+    
+    // setting id
+    public void setUID(int uid){
+        this._uid = uid;
+    }
      
     // getting title
     public String getTitle(){

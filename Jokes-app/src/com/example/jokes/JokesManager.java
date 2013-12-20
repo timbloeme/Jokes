@@ -45,21 +45,21 @@ public class JokesManager extends Activity{
             @Override
             public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
                 //pak het Joke element en geef deze mee aan showJoke
-              	final String item = (String) parent.getItemAtPosition(position);
+              	final Joke item = (Joke) parent.getItemAtPosition(position);
                 showJoke(item);
             }
         });
     }
     
-    public void showJoke(String joke){
+    public void showJoke(Joke joke){
     	ViewFlipper vf = (ViewFlipper) rootView.findViewById(R.id.viewFlipper);
     	vf.setDisplayedChild(4);
         TextView tv = (TextView) rootView.findViewById(R.id.joke_name);
-        tv.setText(joke);
+        tv.setText(joke._user);
         tv = (TextView) rootView.findViewById(R.id.joke_content);
-        tv.setText(joke);
+        tv.setText(joke._content);
         tv = (TextView) rootView.findViewById(R.id.joke_author);
-        tv.setText(joke);
+        tv.setText(joke._user);
     }
     
     public void createJoke() {
@@ -87,7 +87,7 @@ public class JokesManager extends Activity{
                 	
                 	temp.addJokeToDatabase(joke);
 
-            		showJoke(joke.getTitle());
+            		showJoke(joke);
             	}
             }
         });
