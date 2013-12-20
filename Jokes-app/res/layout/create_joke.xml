@@ -26,7 +26,7 @@
     	android:inputType="text|textCapWords"/>
 	
 	<Button
-	    android:id="@+id/createJokeButton"
+	    android:id="@+id/create_joke_button"
     	android:layout_width="match_parent"
     	android:layout_height="wrap_content"
     	android:text="@string/create_joke_button"/>

@@ -21,17 +21,22 @@
     <!-- Joke list layout -->
     <string name="joke_list_title">Most recent jokes:</string>
 
+    <!-- Favorite list layout -->
+    <string name="favorite_list_title">Your favorite jokes:</string>
+
     <!-- Joke layout -->
     <string name="joke_name">Name:</string>
     <string name="joke_author">Author:</string>
-    
 
-    <!-- Create joke layout  -->
+    <!-- Create joke layout -->
     <string name="joke_content">Content:</string>
 
     <!-- Search bar -->
     <string name="search_hint">Search Jokes</string>
     <string name="app_label">Jokes</string>
     <string name="title_activity_searchable">SearchableActivity</string>
+    <string name="title_activity_user">UserActivity</string>
+    <string name="title_activity_favorites">FavoritesActivity</string>
+    <string name="title_activity_home">HomeActivity</string>
 
 </resources>
