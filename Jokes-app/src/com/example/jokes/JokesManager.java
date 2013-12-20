@@ -29,6 +29,8 @@ public class JokesManager extends Activity{
 	
     public void setJokes(List<Joke> jokes){
     	ViewFlipper vf = (ViewFlipper) rootView.findViewById(R.id.viewFlipper);
+    	final List<Joke> jokes2 = jokes;
+
     	if(vf.getDisplayedChild() > 1) {
     		vf.setDisplayedChild(0);
     	}
@@ -45,7 +47,7 @@ public class JokesManager extends Activity{
             @Override
             public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
                 //pak het Joke element en geef deze mee aan showJoke
-              	final Joke item = (Joke) parent.getItemAtPosition(position);
+            	final Joke item = (Joke) jokes2.get(position);
                 showJoke(item);
             }
         });

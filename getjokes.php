@@ -45,5 +45,6 @@
     $outputArr['Android'] = $jsonData;
       
      // Encode Array To JSON Data
+     mysqli_close($con);
      print_r( json_encode($outputArr));
  ?>

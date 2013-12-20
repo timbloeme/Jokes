@@ -67,14 +67,17 @@ class Rest  extends AsyncTask<String, Void, Void> {
                         case GET: 
                         	data = URLEncoder.encode("id", "UTF-8") + "=" + Arrays.toString(request.ids);
                             break;
+                            
                         case DELETE:
                             data = URLEncoder.encode("id", "UTF-8") + "=" + Arrays.toString(request.ids);
                             break;
+                            
                         case CREATE:
                             data  = URLEncoder.encode("joke", "UTF-8") + "=" + request.joke._content;
                             data += "&" + URLEncoder.encode("title", "UTF-8") + "=" + request.joke._title;
                             data += "&" + URLEncoder.encode("uid", "UTF-8") + "=" + request.joke._uid;
                             break;
+                            
                         case UPDATE:
                             data  = URLEncoder.encode("id", "UTF-8") + "=" + request.ids;
                             data += "&" + URLEncoder.encode("joke", "UTF-8") + "=" + request.joke._content;
@@ -114,7 +117,6 @@ class Rest  extends AsyncTask<String, Void, Void> {
             // Append Server Response To Content String 
             returned = sb.toString();
             JSONObject jsonResponse;
-            if(request.operation == GET){
 	            try {
 	                
 	                jsonResponse = new JSONObject(returned);
@@ -139,7 +141,6 @@ class Rest  extends AsyncTask<String, Void, Void> {
 	                Log.v("Restfull error", ex.getMessage());
 	            }finally{
 	            }
-            }
         }
         catch(Exception ex){
             Log.v("Restfull error",ex.getMessage());
