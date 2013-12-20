@@ -10,28 +10,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 
 
 public class FavoritesFragment extends Fragment {
-	public static final int JOKE	   = 1;
-	 
-	Activity ac = new Activity();
-	View rootView;
 	
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
     	
-        rootView = inflater.inflate(R.layout.joke_list, container, false);
+        View rootView = inflater.inflate(R.layout.general, container, false);
+        Activity ac = (Activity) rootView.getContext();
 
     	JokesManager jm = new JokesManager(rootView);
+        
+        ViewFlipper vf = (ViewFlipper) rootView.findViewById(R.id.viewFlipper);
+        vf.setDisplayedChild(1);
 
-        List<Joke> jokes = new ArrayList<Joke>();
-        jokes.add(new Joke("#1","Joke#1","Simone"));
-        jokes.add(new Joke("#2","Joke#2","Simone"));
-        jokes.add(new Joke("#3","Joke#3","Simone"));
-
-        jm.setJokes(jokes);
+    	final MainActivity temp = (MainActivity) ac;
+    	List<Joke> jokes = temp.setJokes("Favorite");
+    	jm.setJokes(jokes);
          
         TextView tv = (TextView) rootView.findViewById(R.id.jokes_list_title);
         tv.setText("Your favorite jokes:");
