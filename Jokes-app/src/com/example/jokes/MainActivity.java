@@ -1,5 +1,6 @@
 package com.example.jokes;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -106,7 +107,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         // on tab selected
         // show respected fragment view
         viewPager.setCurrentItem(tab.getPosition());
-        ViewFlipper vf = (ViewFlipper) findViewById(R.id.jokesFlipper);
+        ViewFlipper vf = (ViewFlipper) findViewById(R.id.viewFlipper);
         if(vf != null && vf.getDisplayedChild() == 1) {
         	vf.setDisplayedChild(0);
         	List<Joke> jokes = db.getRecentJokes();
@@ -147,7 +148,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         return true;
     }
     
-    public void showSearchedJokes(View view) {
+    public void showSearchedJokes(View view) {    	
     	TextView tv = (TextView) findViewById(R.id.jokes_list_title);
     	tv.setText("Found jokes:");
 
@@ -157,5 +158,21 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     	// find jokes with search in the name / author name
     	List<Joke> jokes = db.searchJokes(search);
     	jm.setJokes(jokes);
+    }
+    
+    public List<Joke> setJokes(String type){
+    	List<Joke> error = new ArrayList<Joke>();
+    	if (type.equals("Favorites")){
+    		List<Joke> jokes = db.getAllJokes();
+    		return jokes;
+    	} else if(type.equals("Recent")){
+    		List<Joke> jokes = db.getRecentJokes();
+    		return jokes;
+    	}
+    	return error;
+    }
+    
+    public void addJokeToDatabase(Joke joke){
+    	db.addJoke(joke);
     }
 }

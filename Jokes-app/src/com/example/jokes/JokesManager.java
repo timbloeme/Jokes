@@ -17,16 +17,22 @@ import android.widget.ViewFlipper;
 public class JokesManager extends Activity{
 	View rootView;
 	Activity ac;
-    private DatabaseHandler db;
-	public static final int JOKE	   = 1;
 	
 	JokesManager (View rootView){
 		this.rootView = rootView;
 		this.ac = (Activity) rootView.getContext();
-		this.db = new DatabaseHandler(this);
+	}
+	JokesManager (View rootView, Activity ac){
+		this.rootView = rootView;
+		this.ac = ac;
 	}
 	
     public void setJokes(List<Joke> jokes){
+    	ViewFlipper vf = (ViewFlipper) rootView.findViewById(R.id.viewFlipper);
+    	if(vf.getDisplayedChild() > 1) {
+    		vf.setDisplayedChild(0);
+    	}
+        
         final ArrayList<String> list = new ArrayList<String>();
         for (Joke joke : jokes) {
     		list.add(joke.getTitle());
@@ -46,9 +52,8 @@ public class JokesManager extends Activity{
     }
     
     public void showJoke(String joke){
-    	ViewFlipper vf = (ViewFlipper) rootView.findViewById(R.id.jokesFlipper);
-    	vf.setDisplayedChild(1);
-    	Log.v("TEST",joke);
+    	ViewFlipper vf = (ViewFlipper) rootView.findViewById(R.id.viewFlipper);
+    	vf.setDisplayedChild(4);
         TextView tv = (TextView) rootView.findViewById(R.id.joke_name);
         tv.setText(joke);
         tv = (TextView) rootView.findViewById(R.id.joke_content);
@@ -57,7 +62,8 @@ public class JokesManager extends Activity{
         tv.setText(joke);
     }
     
-    public void createJoke() {    	    	
+    public void createJoke() {
+    	final MainActivity temp = (MainActivity) ac;
     	final Button button = (Button) rootView.findViewById(R.id.create_joke_button);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -79,7 +85,7 @@ public class JokesManager extends Activity{
                 	
                 	Joke joke = new Joke(name, content, author);
                 	
-                    db.addJoke(joke);
+                	temp.addJokeToDatabase(joke);
 
             		showJoke(joke.getTitle());
             	}
